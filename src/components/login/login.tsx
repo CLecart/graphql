@@ -2,6 +2,7 @@
 import { loginForm } from '@/app/api/login';
 import React, { useState } from 'react'
 import { z } from 'zod'
+import { Button } from '../ui/button';
 
 const schema = z.object({
     email: z.string().email("Email invalide"),
@@ -76,12 +77,11 @@ export default function ExempleForm() {
           {errors.password && <span className="text-red-500">{errors.password}</span>}
           </div>
           
-          <button
+          <Button
           type="submit"
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-          >
+          variant={"default"}>
             Login
-          </button>
+          </Button>
         </form>
       </main>
     </div>
