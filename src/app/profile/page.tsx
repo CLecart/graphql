@@ -44,7 +44,22 @@ export default function ProfilePage() {
   if (!isClient) {
     return null;
   }
-
+// Fonction utilitaire pour extraire les attributs utilisateur
+const getAttrsValue = (attrs: any, key: string, defaultValue: string = 'N/A') => {
+  if (!attrs) return defaultValue;
+  
+  try {
+    if (typeof attrs === 'string') {
+      return JSON.parse(attrs)[key] || defaultValue;
+    } else if (typeof attrs === 'object') {
+      return attrs[key] || defaultValue;
+    }
+  } catch (e) {
+    console.error("Error parsing attrs:", e);
+  }
+  
+  return defaultValue;
+};
   return (
     <div className="min-h-screen p-8">
       <header className="flex justify-between items-center mb-12">
@@ -60,7 +75,7 @@ export default function ProfilePage() {
             <p className="text-lg mb-2">Login: {userData.user[0].login}</p>
             <p className="text-lg mb-2">User ID: {userData.user[0].id}</p>
             {userData.user[0].attrs && (
-              <p className="mb-2">Campus: {JSON.parse(userData.user[0].attrs)?.campus || 'N/A'}</p>
+              <p className="mb-2">Campus: {getAttrsValue(userData.user[0].attrs, 'campus')}</p>
             )}
           </div>
         )}
