@@ -12,7 +12,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>
 
-export default function ExempleForm() {
+export default function LoginForm() {
     const router = useRouter();
     const [formData, setFormData] = useState<FormData>({
         email: '',
@@ -59,43 +59,89 @@ export default function ExempleForm() {
     }
 
     return (
-        <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-            <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-                <h1 className="text-3xl font-bold">Login</h1>
-                <div className="flex flex-col gap-9 w-full"></div>
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full max-w-md">
-                    <div className='flex flex-col gap-2'>
-                        <input
-                            type="text"
-                            name='email'
-                            placeholder="Email or Username"
-                            className="border border-solid border-black/[.08] dark:border-white/[.145] px-4 py-2 rounded"
-                            onChange={handleChange}
-                            disabled={isLoading}
-                        />
-                        {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+        <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
+            {/* Left side - Illustration or image */}
+            <div className="hidden md:flex bg-primary/10 items-center justify-center p-8">
+                <div className="max-w-md">
+                    <div className="text-4xl font-bold mb-4 text-primary">Zone01 GraphQL Profile</div>
+                    <p className="text-lg text-muted-foreground">
+                        Access your student profile with detailed statistics and visualizations of your academic journey.
+                    </p>
+                    
+                    {/* Abstract SVG decoration */}
+                    <div className="mt-12 opacity-80">
+                        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-64 h-64">
+                            <path fill="var(--color-primary)" d="M46.5,-64.2C59.9,-55.1,69.9,-41.5,76.2,-25.9C82.4,-10.2,84.9,7.3,80.2,22.9C75.5,38.5,63.5,52.1,48.9,60.7C34.2,69.3,17.1,73,0.1,72.9C-17,72.8,-33.9,68.9,-48.4,60.1C-62.8,51.3,-74.8,37.6,-79.4,21.8C-83.9,6,-81,-11.9,-73.2,-26.9C-65.5,-41.8,-52.9,-53.7,-39.2,-62.8C-25.5,-71.8,-12.8,-77.9,1.9,-80.4C16.5,-82.9,33.1,-73.3,46.5,-64.2Z" transform="translate(100 100)" />
+                        </svg>
                     </div>
-                    <div className='flex flex-col gap-2'>
-                        <input
-                            type="password"
-                            name='password'
-                            placeholder="Password"
-                            className="border border-solid border-black/[.08] dark:border-white/[.145] px-4 py-2 rounded"
-                            onChange={handleChange}
-                            disabled={isLoading}
-                        />
-                        {errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
+                </div>
+            </div>
+            
+            {/* Right side - Login form */}
+            <div className="flex flex-col justify-center p-8">
+                <div className="mx-auto w-full max-w-md space-y-8">
+                    <div>
+                        <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
+                        <p className="text-muted-foreground">Sign in to access your Zone01 profile</p>
                     </div>
                     
-                    <Button
-                        type="submit"
-                        variant="default"
-                        disabled={isLoading}
-                    >
-                        {isLoading ? 'Logging in...' : 'Login'}
-                    </Button>
-                </form>
-            </main>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium mb-2">
+                                Email or Username
+                            </label>
+                            <input
+                                id="email"
+                                type="text"
+                                name="email"
+                                placeholder="Enter your email or username"
+                                className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                onChange={handleChange}
+                                disabled={isLoading}
+                            />
+                            {errors.email && <p className="mt-1 text-sm text-destructive">{errors.email}</p>}
+                        </div>
+                        
+                        <div>
+                            <div className="flex justify-between items-center mb-2">
+                                <label htmlFor="password" className="block text-sm font-medium">
+                                    Password
+                                </label>
+                            </div>
+                            <input
+                                id="password"
+                                type="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                onChange={handleChange}
+                                disabled={isLoading}
+                            />
+                            {errors.password && <p className="mt-1 text-sm text-destructive">{errors.password}</p>}
+                        </div>
+                        
+                        <Button
+                            type="submit"
+                            className="w-full py-6 text-base"
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <span className="flex items-center justify-center">
+                                    <svg className="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Logging in...
+                                </span>
+                            ) : 'Sign in'}
+                        </Button>
+                    </form>
+                    
+                    <div className="text-center text-sm text-muted-foreground mt-4">
+                        Powered by GraphQL & Next.js
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
