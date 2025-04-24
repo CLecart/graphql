@@ -42,7 +42,7 @@ export default function ProfilePage() {
   };
   
   // Calcul des statistiques
-  const totalXP = xpData?.transaction?.reduce((sum: number, tx: { amount: number }) => sum + tx.amount, 0) || 0;
+  const totalXP = xpData?.cursusXp?.aggregate?.sum?.amount || 0;
   const completedProjects = progressData?.progress?.filter((p: { grade: number }) => p.grade > 0).length || 0;
   const totalAudits = auditsData?.audit?.length || 0;
   

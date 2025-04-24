@@ -11,17 +11,50 @@ export const GET_USER_INFO = gql`
 `;
 
 export const GET_USER_XP = gql`
-  query GetUserXp {
-    transaction(where: {type: {_eq: "xp"}}, order_by: {createdAt: asc}) {
-      id
-      type
-      amount
-      createdAt
-      path
-      objectId
+query GetXpStats {
+  piscineGoXp: transaction_aggregate(where: {
+    type: { _eq: "xp" },
+    path: { _like: "%piscine-go%" }
+  }) {
+    aggregate {
+      sum {
+        amount
+      }
     }
   }
-`;
+  
+  piscineJsXp: transaction_aggregate(where: {
+    type: { _eq: "xp" },
+    path: { _like: "%piscine-js/%" }  # Note the trailing slash - matches paths where piscine-js is followed by more content
+  }) {
+    aggregate {
+      sum {
+        amount
+      }
+    }
+  }
+  
+  cursusXp: transaction_aggregate(where: {
+    type: { _eq: "xp" },
+    _or: [
+      { 
+        path: { _like: "%div-01%" },
+        _not: { path: { _like: "%piscine%" } } 
+      },
+      {
+        path: { _like: "%div-01/piscine-js" },  # Ends with piscine-js (no trailing slash)
+        _not: { path: { _like: "%piscine-js/%" } }
+      }
+    ]
+  }) {
+    aggregate {
+      sum {
+        amount
+      }
+    }
+  }
+}
+`
 
 export const GET_USER_PROGRESS = gql`
   query GetUserProgress {
