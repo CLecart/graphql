@@ -1,16 +1,63 @@
 'use client';
 
+import { CheckCircle2, Clock } from 'lucide-react';
 import { useQuery } from '@apollo/client';
 import { GET_USER_INFO, GET_USER_XP, GET_USER_PROGRESS, GET_USER_RESULTS, 
-         GET_USER_AUDITS, GET_USER_DETAILED_XP, GET_USER_SKILLS } from '@/lib/queries';
+         GET_USER_AUDITS, GET_USER_DETAILED_XP, GET_USER_SKILLS, GET_BEST_FRIEND, GET_ACTIVITY, 
+         GET_AUDITS, GET_PROJECTS} from '@/lib/queries';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { XPChart } from '@/components/charts/XPChart';
 import { ProjectsChart } from '@/components/charts/ProjectsChart';
 import { XPByProjectChart } from '@/components/charts/XPByProjectChart';
 import { SkillsRadarChart } from '@/components/charts/SkillsRadarChart';
-import { ActivityHeatmap } from '@/components/charts/ActivityHeatmap';
+import ActivityHeatmap from '@/components/charts/ActivityHeatmap';
 import { Button } from '@/components/ui/button';
+import { XpTimelineChart } from '@/components/charts/XpOverTime';
+import { SpiderWebChart } from '@/components/charts/SpiderWebGraph';
+import BestFriendsComponent from '@/components/charts/BestFriends';
+import RecentXPGains from '@/components/charts/RecentXpGained';
+import AuditList from '@/components/charts/AuditStats';
+import AuditPieChart from '@/components/charts/AuditPie';
+
+// Types
+interface Audit {
+  createdAt: string;
+  grade: number | null;
+  group: {
+    object: {
+      name: string;
+      type: string;
+    };
+    members: {
+      user: {
+        id: number;
+        login: string;
+      };
+    }[];
+  };
+}
+// First, define your TypeScript interfaces
+interface TransactionObject {
+  name: string;
+  type: string;
+}
+
+interface Transaction {
+  type: string;
+  amount: number;
+  createdAt: string;
+  path: string;
+  object: TransactionObject | null;
+}
+
+interface User {
+  transactions?: Transaction[];
+}
+
+interface QueryData {
+  user?: User[];
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -22,9 +69,13 @@ export default function ProfilePage() {
   const { data: xpData, loading: xpLoading } = useQuery(GET_USER_XP);
   const { data: progressData, loading: progressLoading } = useQuery(GET_USER_PROGRESS);
   const { data: resultsData, loading: resultsLoading } = useQuery(GET_USER_RESULTS);
-  const { data: auditsData, loading: auditsLoading } = useQuery(GET_USER_AUDITS);
+  // const { data: auditsData, loading: auditsLoading } = useQuery(GET_USER_AUDITS);
   const { data: detailedXpData, loading: detailedXpLoading } = useQuery(GET_USER_DETAILED_XP);
   const { data: skillsData, loading: skillsLoading } = useQuery(GET_USER_SKILLS);
+  const { data: bestFriendData, loading: bestFriendLoading } = useQuery(GET_BEST_FRIEND);
+  const { data: activityData, loading: activityLoading } = useQuery(GET_ACTIVITY);
+  const { data: auditData, loading: auditLoading } = useQuery(GET_AUDITS);
+  const { data: projectData, loading: projectLoading } = useQuery(GET_PROJECTS);
   
   // Vérification d'authentification côté client
   useEffect(() => {
@@ -42,13 +93,23 @@ export default function ProfilePage() {
   };
   
   // Calcul des statistiques
-  const totalXP = xpData?.cursusXp?.aggregate?.sum?.amount || 0;
+  const totalXP = xpData?.cursusXpAggregate?.aggregate?.sum?.amount || 0;
   const completedProjects = progressData?.progress?.filter((p: { grade: number }) => p.grade > 0).length || 0;
-  const totalAudits = auditsData?.audit?.length || 0;
+  // const totalAudits = auditsData?.audit?.length || 0;
+  // console.log("userData: ", progressData);
+
+  // Activity graph data (github graph)
+  const activityGraphData = activityData?.user?.[0]?.progresses || [];
+
+  // Number of projects done
+  const projectCount = projectData?.user?.[0]?.transactions?.filter(
+    (transaction: Transaction) => transaction.object?.type === "project"
+  ).length || 0;
   
   // État de chargement
   const isLoading = userLoading || xpLoading || progressLoading || 
-                    resultsLoading || auditsLoading || detailedXpLoading || skillsLoading;
+                    resultsLoading || detailedXpLoading || skillsLoading || bestFriendLoading
+                    || activityLoading || auditLoading;
   
   if (isLoading) {
     return (
@@ -80,11 +141,12 @@ export default function ProfilePage() {
   };
 
   // Combiner les données pour l'activité
-  const allActivityData = [
-    ...(xpData?.transaction || []),
-    ...(progressData?.progress || []),
-    ...(resultsData?.result || [])
-  ];
+  // const allActivityData = [
+  //   ...(xpData?.transaction || []),
+  //   ...(progressData?.progress || []),
+  //   ...(resultsData?.result || [])
+  // ];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/40">
@@ -132,7 +194,7 @@ export default function ProfilePage() {
               }`}
               onClick={() => setActiveTab('projects')}
             >
-              Projects
+              Xp gains
             </button>
             <button
               className={`px-4 py-2 font-medium transition-colors ${
@@ -142,9 +204,9 @@ export default function ProfilePage() {
               }`}
               onClick={() => setActiveTab('skills')}
             >
-              Skills & Metrics
+              Audits
             </button>
-            <button
+            {/* <button
               className={`px-4 py-2 font-medium transition-colors ${
                 activeTab === 'activity' 
                   ? 'text-primary border-b-2 border-primary' 
@@ -153,7 +215,7 @@ export default function ProfilePage() {
               onClick={() => setActiveTab('activity')}
             >
               Activity
-            </button>
+            </button> */}
           </div>
         </div>
         
@@ -185,7 +247,7 @@ export default function ProfilePage() {
                       {userData.user[0].attrs && (
                         <div className="flex justify-between items-center pb-2 border-b border-border/30">
                           <span className="text-muted-foreground">Campus</span>
-                          <span className="font-medium">{getAttrsValue(userData.user[0].attrs, 'campus')}</span>
+                          <span className="font-medium">{(progressData.progress[0].campus)[0].toUpperCase()+(progressData.progress[0].campus).slice(1)}</span>
                         </div>
                       )}
                     </div>
@@ -193,40 +255,87 @@ export default function ProfilePage() {
                 )}
               </div>
               
-              {/* Carte XP */}
+              {/* XP Card with centered content */}
               <div className="col-span-2 bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
-                <div className="bg-primary/10 p-6">
-                  <h2 className="text-xl font-semibold mb-2">Experience Overview</h2>
+                <div className="bg-primary/10 p-6 text-center">
+                  <h2 className="text-xl font-semibold">Experience Overview</h2>
                 </div>
                 <div className="p-6">
+                  {/* First row - 3 items */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div className="bg-background/50 rounded-lg p-4 border border-border/30">
+                    {/* XP */}
+                    <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">Total XP</h3>
-                      <p className="text-3xl font-bold">{totalXP.toLocaleString()}</p>
+                      <p className="text-3xl font-bold">{(totalXP/1000000).toFixed(2)}M</p>
                     </div>
-                    <div className="bg-background/50 rounded-lg p-4 border border-border/30">
+                    
+                    {/* Projects */}
+                    <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">Projects</h3>
-                      <p className="text-3xl font-bold">{completedProjects}</p>
+                      <p className="text-3xl font-bold">{projectCount}</p>
                     </div>
-                    <div className="bg-background/50 rounded-lg p-4 border border-border/30">
-                      <h3 className="text-sm text-muted-foreground mb-1">Audits</h3>
-                      <p className="text-3xl font-bold">{totalAudits}</p>
+                    
+                    {/* Total Audits */}
+                    <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
+                      <h3 className="text-sm text-muted-foreground mb-1">Total Audits</h3>
+                      <p className="text-3xl font-bold">{auditData?.user?.[0]?.audits_as_auditor?.length || 0}</p>
                     </div>
                   </div>
                   
+                  {/* Second row - 3 items */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {/* Completed Audits */}
+                    <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
+                      <h3 className="text-sm text-muted-foreground mb-1">Completed Audits</h3>
+                      <p className="text-3xl font-bold text-green-500">
+                        {auditData?.user?.[0]?.audits_as_auditor?.filter((a: Audit) => a.grade !== null).length || 0}
+                      </p>
+                    </div>
+                    
+                    {/* Pending Audits */}
+                    <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
+                      <h3 className="text-sm text-muted-foreground mb-1">Audits not completed</h3>
+                      <p className="text-3xl font-bold text-red-400">
+                        {auditData?.user?.[0]?.audits_as_auditor?.filter((a: Audit) => a.grade === null).length || 0}
+                      </p>
+                    </div>
+                    
+                    {/* Pie Chart */}
+                    <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex items-center justify-center">
+                      <div className="text-center">
+                        {/* <h3 className="text-sm text-muted-foreground mb-2">Audit Ratio</h3> */}
+                        <div className="flex justify-center">
+                          <AuditPieChart 
+                            completed={auditData?.user?.[0]?.audits_as_auditor?.filter((a: Audit) => a.grade !== null).length || 0}
+                            pending={auditData?.user?.[0]?.audits_as_auditor?.filter((a: Audit) => a.grade === null).length || 0}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* XP Chart (if available) */}
                   {xpData?.transaction && (
-                    <div className="h-64">
+                    <div className="h-64 mt-6">
                       <XPChart data={xpData.transaction} />
                     </div>
                   )}
                 </div>
               </div>
             </div>
+
+            {/* XP Over Time section */}
+            <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
+              <div className="bg-primary/10 p-6">
+                <h2 className="text-xl font-semibold mb-2">Xp Over time</h2>
+              </div>
+              <XpTimelineChart data={xpData?.cursusXpDetails}/>
+            </div>
             
             {/* Graphiques de présentation */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               {/* Graphique de complétion de projet */}
-              <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
+              {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
                 <div className="bg-primary/10 p-6">
                   <h2 className="text-xl font-semibold mb-2">Project Completion</h2>
                 </div>
@@ -235,18 +344,31 @@ export default function ProfilePage() {
                     <ProjectsChart data={progressData.progress} />
                   )}
                 </div>
+              </div> */}
+              <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
+              <div className="bg-primary/10 p-6">
+                <h2 className="text-xl font-semibold mb-2">Skills tree</h2>
               </div>
+              {skillsData?.user?.[0]?.transactions && (
+                <div className="bg-card rounded-xl p-6 shadow border border-border">
+                  <SpiderWebChart 
+                    data={skillsData.user[0].transactions} 
+                    width={500}
+                    height={500}
+                    />
+                </div>
+              )}
+            </div>
               
               {/* Graphique des compétences */}
               <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
                 <div className="bg-primary/10 p-6">
-                  <h2 className="text-xl font-semibold mb-2">Skills Overview</h2>
+                  <h2 className="text-xl font-semibold mb-2">Your Coding Companions</h2>
                 </div>
-                <div className="p-6">
-                  {skillsData?.progress && (
-                    <SkillsRadarChart data={skillsData.progress} />
-                  )}
-                </div>
+                <BestFriendsComponent 
+                  data={bestFriendData} 
+                  currentUserLogin={userData?.user[0].login}
+                />
               </div>
             </div>
             
@@ -255,17 +377,14 @@ export default function ProfilePage() {
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Activity Heatmap</h2>
               </div>
-              <div className="p-6">
-                <ActivityHeatmap data={allActivityData} />
+              <div className="p-4">
+                <ActivityHeatmap data={activityGraphData} />
               </div>
             </div>
             
             {/* Projets récents */}
-            <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
-              <div className="bg-primary/10 p-6">
-                <h2 className="text-xl font-semibold mb-2">Recent Projects</h2>
-              </div>
-              <div className="p-6">
+            {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50"> */}
+              {/* <div className="p-6">
                 <div className="overflow-hidden">
                   <table className="w-full">
                     <thead>
@@ -308,8 +427,8 @@ export default function ProfilePage() {
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </div>
+              </div> */}
+            {/* </div> */}
           </>
         )}
         
@@ -317,7 +436,7 @@ export default function ProfilePage() {
         {activeTab === 'projects' && (
           <>
             {/* Graphique des XP par projet */}
-            <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
+            {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">XP by Project</h2>
               </div>
@@ -326,14 +445,15 @@ export default function ProfilePage() {
                   <XPByProjectChart data={detailedXpData.transaction} />
                 )}
               </div>
-            </div>
+            </div> */}
             
             {/* Liste complète des projets */}
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
               <div className="bg-primary/10 p-6">
-                <h2 className="text-xl font-semibold mb-2">All Projects</h2>
+                <h2 className="text-xl font-semibold mb-2">All Xp gains</h2>
               </div>
-              <div className="p-6">
+              <RecentXPGains transactions={detailedXpData.transaction} />
+              {/* <div className="p-6">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
@@ -384,7 +504,7 @@ export default function ProfilePage() {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div> */}
             </div>
           </>
         )}
@@ -393,7 +513,7 @@ export default function ProfilePage() {
         {activeTab === 'skills' && (
           <>
             {/* Graphique radar des compétences */}
-            <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
+            {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Skills Radar</h2>
               </div>
@@ -404,14 +524,15 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
-            </div>
+            </div> */}
             
             {/* Historique des audits */}
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Audit History</h2>
               </div>
-              <div className="p-6">
+              <AuditList data={auditData} />
+              {/* <div className="p-6">
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
@@ -453,7 +574,7 @@ export default function ProfilePage() {
                     </tbody>
                   </table>
                 </div>
-              </div>
+              </div> */}
             </div>
           </>
         )}
@@ -467,18 +588,18 @@ export default function ProfilePage() {
                 <h2 className="text-xl font-semibold mb-2">Activity Heatmap</h2>
               </div>
               <div className="p-6">
-                <ActivityHeatmap data={allActivityData} />
+                <ActivityHeatmap data={activityData} />
               </div>
             </div>
             
-            {/* Timeline d'activité récente */}
+            {/* Timeline d'activité récente
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Recent Activity</h2>
               </div>
               <div className="p-6">
                 <div className="space-y-6">
-                  {allActivityData
+                  {activityData
                     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                     .slice(0, 15)
                     .map((activity: any, index: number) => {
@@ -544,7 +665,7 @@ export default function ProfilePage() {
                     })}
                 </div>
               </div>
-            </div>
+            </div> */}
           </>
         )}
       </div>

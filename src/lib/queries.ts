@@ -11,55 +11,113 @@ export const GET_USER_INFO = gql`
 `;
 
 export const GET_USER_XP = gql`
-query GetXpStats {
-  piscineGoXp: transaction_aggregate(where: {
-    type: { _eq: "xp" },
-    path: { _like: "%piscine-go%" }
-  }) {
-    aggregate {
-      sum {
-        amount
+  query GetXpStatsWithDetails {
+    # Piscine Go - Aggregate
+    piscineGoXpAggregate: transaction_aggregate(
+      where: {
+        type: { _eq: "xp" },
+        path: { _like: "%piscine-go%" }
+      }
+    ) {
+      aggregate {
+        sum {
+          amount
+        }
       }
     }
-  }
-  
-  piscineJsXp: transaction_aggregate(where: {
-    type: { _eq: "xp" },
-    path: { _like: "%piscine-js/%" }  # Note the trailing slash - matches paths where piscine-js is followed by more content
-  }) {
-    aggregate {
-      sum {
-        amount
-      }
-    }
-  }
-  
-  cursusXp: transaction_aggregate(where: {
-    type: { _eq: "xp" },
-    _or: [
-      { 
-        path: { _like: "%div-01%" },
-        _not: { path: { _like: "%piscine%" } } 
+    
+    # Piscine Go - Detailed transactions
+    piscineGoXpDetails: transaction(
+      where: {
+        type: { _eq: "xp" },
+        path: { _like: "%piscine-go%" }
       },
-      {
-        path: { _like: "%div-01/piscine-js" },  # Ends with piscine-js (no trailing slash)
-        _not: { path: { _like: "%piscine-js/%" } }
+      order_by: { createdAt: asc }
+    ) {
+      amount
+      createdAt
+      path
+    }
+    
+    # Piscine JS - Aggregate
+    piscineJsXpAggregate: transaction_aggregate(
+      where: {
+        type: { _eq: "xp" },
+        path: { _like: "%piscine-js/%" }
       }
-    ]
-  }) {
-    aggregate {
-      sum {
-        amount
+    ) {
+      aggregate {
+        sum {
+          amount
+        }
       }
     }
+    
+    # Piscine JS - Detailed transactions
+    piscineJsXpDetails: transaction(
+      where: {
+        type: { _eq: "xp" },
+        path: { _like: "%piscine-js/%" }
+      },
+      order_by: { createdAt: asc }
+    ) {
+      amount
+      createdAt
+      path
+    }
+    
+    # Cursus - Aggregate
+    cursusXpAggregate: transaction_aggregate(
+      where: {
+        type: { _eq: "xp" },
+        _or: [
+          { 
+            path: { _like: "%div-01%" },
+            _not: { path: { _like: "%piscine%" } } 
+          },
+          {
+            path: { _like: "%div-01/piscine-js" },
+            _not: { path: { _like: "%piscine-js/%" } }
+          }
+        ]
+      }
+    ) {
+      aggregate {
+        sum {
+          amount
+        }
+      }
+    }
+    
+    # Cursus - Detailed transactions
+    cursusXpDetails: transaction(
+      where: {
+        type: { _eq: "xp" },
+        _or: [
+          { 
+            path: { _like: "%div-01%" },
+            _not: { path: { _like: "%piscine%" } } 
+          },
+          {
+            path: { _like: "%div-01/piscine-js" },
+            _not: { path: { _like: "%piscine-js/%" } }
+          }
+        ]
+      },
+      order_by: { createdAt: asc }
+    ) {
+      amount
+      createdAt
+      path
+    }
   }
-}
 `
 
 export const GET_USER_PROGRESS = gql`
   query GetUserProgress {
     progress {
       id
+      campus
       grade
       createdAt
       updatedAt
@@ -105,37 +163,129 @@ export const GET_USER_AUDITS = gql`
 
 export const GET_USER_DETAILED_XP = gql`
   query GetUserDetailedXp {
-    transaction(
-      where: {type: {_eq: "xp"}}
-      order_by: {amount: desc}
+    transaction (
+      where: {
+        type: {_eq: "xp"},
+        path: {_niregex: "/(piscine-[^/]+/)"}
+      },
+      order_by: {createdAt: desc}
     ) {
       id
+      type
       amount
-      path
       createdAt
+      path
       objectId
-      object {
-        name
-        type
-      }
     }
   }
 `;
 
 export const GET_USER_SKILLS = gql`
-  query GetUserSkills {
-    progress(
-      where: {object: {type: {_in: ["exercise", "project"]}}}
-      order_by: {updatedAt: desc}
-    ) {
-      id
-      grade
-      path
-      object {
-        name
+  query GetSkills {
+    user {
+      transactions(
+        where: {
+          _and: [
+            { type: { _neq: "xp" } },
+            { type: { _neq: "level" } }
+            { type: { _neq: "up" } }
+            { type: { _neq: "down" } }
+          ]
+        }
+        order_by: { createdAt: asc }
+      ) {
         type
-        attrs
+        amount
       }
     }
   }
 `;
+
+export const GET_BEST_FRIEND = gql`
+query GetBestFriend {
+  user {
+    groups(where: { group: { object: { type: { _eq: "project" } } } }) {
+      id
+      createdAt
+      group {
+        object {
+          type
+        }
+        captainId
+        members {
+          user {
+            login
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+// export const GET_ACTIVITY = gql`
+// query GetActivity {
+//   user {
+//     results(
+//       order_by: [{updatedAt: desc}, {createdAt: desc}]
+//     ) {
+//       createdAt
+//     }
+//   }
+// }
+// `
+
+export const GET_ACTIVITY = gql`
+query GetActivity {
+  user {
+    progresses(
+      order_by: {createdAt: desc}
+    ) {
+      createdAt
+    }
+  }
+}
+`
+
+export const GET_AUDITS = gql`
+query GetAudits {
+  user {
+    audits_as_auditor: audits(order_by: {createdAt: desc}) {
+      createdAt
+      grade
+      group {
+        object {
+          name
+          type
+        }
+        members {
+          user {
+            id
+            login
+          }
+        }
+      }
+    }
+  }
+}
+`
+
+export const GET_PROJECTS = gql`
+  query GetProjects {
+    user {
+      transactions(
+          where: {type: {_eq: "xp"}}
+          order_by: {createdAt: desc}
+        ) {
+          type
+          amount
+          createdAt
+          path
+          object {
+            name
+            type
+          }
+        }
+    }
+  }
+`

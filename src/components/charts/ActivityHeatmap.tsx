@@ -1,158 +1,184 @@
-'use client';
-import { useState, useEffect } from 'react';
+import React from 'react';
 
 type ActivityData = {
-  date: string;
-  count: number;
+  createdAt: string;
+  __typename?: string;
 };
 
-export function ActivityHeatmap({ data }: { data: any[] }) {
-  const [activityData, setActivityData] = useState<ActivityData[]>([]);
-  
-  // Traitement des données pour créer un heatmap
-  useEffect(() => {
-    if (!data || data.length === 0) return;
-    
-    // Organiser les données par date
-    const activityByDate = new Map<string, number>();
-    
-    // Utiliser la date de création comme date d'activité
-    data.forEach((item) => {
-      const date = new Date(item.createdAt);
-      const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+type ActivityHeatmapProps = {
+  data: ActivityData[] | null | undefined;
+};
+
+const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
+  // Process data to count activities per day
+  const processData = (activities: ActivityData[] | null | undefined) => {
+    const activityMap: Record<string, number> = {};
+
+    if (!activities || !Array.isArray(activities)) {
+      return activityMap;
+    }
+
+    activities.forEach((activity) => {
+      if (!activity?.createdAt) return;
       
-      const count = activityByDate.get(dateString) || 0;
-      activityByDate.set(dateString, count + 1);
-    });
-    
-    // Remplir les jours manquants au cours des 6 derniers mois
-    const today = new Date();
-    const sixMonthsAgo = new Date(today);
-    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    
-    let currentDate = new Date(sixMonthsAgo);
-    while (currentDate <= today) {
-      const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-      
-      if (!activityByDate.has(dateStr)) {
-        activityByDate.set(dateStr, 0);
+      try {
+        const date = new Date(activity.createdAt);
+        const dateStr = date.toISOString().split('T')[0];
+        activityMap[dateStr] = (activityMap[dateStr] || 0) + 1;
+      } catch (e) {
+        console.warn('Invalid date format', activity.createdAt);
       }
-      
-      currentDate.setDate(currentDate.getDate() + 1);
+    });
+
+    return activityMap;
+  };
+
+  const activityCounts = processData(data);
+
+  // Generate 52 weeks of data (like GitHub)
+  const generateGitHubWeeks = () => {
+    const weeks: Date[][] = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Find most recent Sunday
+    const lastSunday = new Date(today);
+    lastSunday.setDate(lastSunday.getDate() - lastSunday.getDay());
+    
+    // Generate 52 weeks (364 days)
+    for (let week = 0; week < 52; week++) {
+      const weekDays: Date[] = [];
+      for (let day = 0; day < 7; day++) {
+        const date = new Date(lastSunday);
+        date.setDate(date.getDate() - (51 - week) * 7 + day);
+        weekDays.push(date);
+      }
+      weeks.push(weekDays);
     }
     
-    // Convertir en tableau pour le rendu
-    const sortedActivity = Array.from(activityByDate.entries())
-      .map(([date, count]) => ({ date, count }))
-      .sort((a, b) => a.date.localeCompare(b.date));
-    
-    setActivityData(sortedActivity);
-  }, [data]);
-  
-  if (activityData.length === 0) return <div>No activity data available</div>;
-  
-  // Configuration du rendu
-  const cellSize = 12;
-  const cellMargin = 2;
-  const daysInWeek = 7;
-  const weeksCount = Math.ceil(activityData.length / daysInWeek);
-  const width = weeksCount * (cellSize + cellMargin);
-  const height = daysInWeek * (cellSize + cellMargin);
-  
-  // Trouver la valeur maximale pour l'échelle de couleur
-  const maxActivity = Math.max(...activityData.map(d => d.count));
-  
-  // Fonction pour déterminer la couleur d'une cellule
-  const getCellColor = (count: number) => {
-    if (count === 0) return 'var(--color-muted)';
-    const intensity = Math.min(1, count / (maxActivity * 0.7));
-    return `hsl(var(--chart-1-hsl), ${intensity * 100}%)`;
+    return weeks;
   };
-  
-  // Mois à afficher
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const monthLabels = new Set<string>();
-  activityData.forEach(item => {
-    const date = new Date(item.date);
-    monthLabels.add(`${months[date.getMonth()]} ${date.getFullYear()}`);
-  });
-  
+
+  const weeks = generateGitHubWeeks();
+
+  // Get month labels for the heatmap
+  const getMonthLabels = () => {
+    const months: { name: string; position: number }[] = [];
+    let currentMonth = '';
+    
+    // Check the first week (oldest dates) for month transitions
+    weeks[0].forEach((date, dayIndex) => {
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      if (month !== currentMonth) {
+        months.push({ name: month, position: dayIndex });
+        currentMonth = month;
+      }
+    });
+    
+    return months;
+  };
+
+  const monthLabels = getMonthLabels();
+
+  // Determine color intensity
+  const getColorIntensity = (count: number) => {
+    if (!count) return 'bg-gray-100 dark:bg-gray-700';
+    if (count <= 2) return 'bg-blue-200 dark:bg-blue-900';
+    if (count <= 5) return 'bg-blue-300 dark:bg-blue-800';
+    if (count <= 8) return 'bg-blue-400 dark:bg-blue-700';
+    return 'bg-blue-500 dark:bg-blue-600';
+  };
+
+  // Format date for tooltip
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  // Get count for a specific date
+  const getActivityCount = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    return activityCounts[dateStr] || 0;
+  };
+
   return (
-    <div className="w-full overflow-x-auto">
-      <h3 className="text-lg font-medium mb-4">Activity Overview</h3>
-      <div className="min-w-[700px]">
-        <svg width="100%" height={height + 30} viewBox={`0 0 ${width + 30} ${height + 30}`}>
-          {/* Jours de la semaine */}
-          <text x="10" y={cellSize + 4} fontSize="9" fill="currentColor" opacity="0.7">Mon</text>
-          <text x="10" y={(cellSize + cellMargin) * 3 + 4} fontSize="9" fill="currentColor" opacity="0.7">Wed</text>
-          <text x="10" y={(cellSize + cellMargin) * 5 + 4} fontSize="9" fill="currentColor" opacity="0.7">Fri</text>
-          
-          {/* Cellules d'activité */}
-          {activityData.map((day, index) => {
-            const weekIndex = Math.floor(index / daysInWeek);
-            const dayIndex = index % daysInWeek;
-            const x = 30 + weekIndex * (cellSize + cellMargin);
-            const y = dayIndex * (cellSize + cellMargin);
-            const color = getCellColor(day.count);
-            const date = new Date(day.date);
-            const formattedDate = date.toLocaleDateString(undefined, { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            });
-            
-            return (
-              <rect
-                key={day.date}
-                x={x}
-                y={y}
-                width={cellSize}
-                height={cellSize}
-                rx={2}
-                fill={color}
-                opacity={day.count > 0 ? 1 : 0.3}
-                data-tip={`${formattedDate}: ${day.count} contributions`}
-                className="cursor-pointer hover:stroke-primary hover:stroke-1"
-              >
-                <title>{`${formattedDate}: ${day.count} activities`}</title>
-              </rect>
-            );
-          })}
-          
-          {/* Labels des mois */}
-          {Array.from(monthLabels).map((month, index) => {
-            // Approximatif, pour positionner les mois
-            const x = 30 + index * (width / monthLabels.size);
-            return (
-              <text 
-                key={month} 
-                x={x} 
-                y={height + 20} 
-                fontSize="10" 
-                fill="currentColor"
-              >
-                {month}
-              </text>
-            );
-          })}
-        </svg>
-        
-        {/* Légende */}
-        <div className="flex items-center gap-2 mt-4 justify-end">
-          <span className="text-xs text-muted-foreground">Less</span>
-          {[0, 1, 2, 3, 4].map(level => (
-            <div 
-              key={level} 
-              className="w-3 h-3 rounded-sm" 
-              style={{ 
-                backgroundColor: level === 0 ? 'var(--color-muted)' : `hsl(var(--chart-1-hsl), ${level * 25}%)`,
-                opacity: level === 0 ? 0.3 : 1
-              }}
-            ></div>
-          ))}
-          <span className="text-xs text-muted-foreground">More</span>
+    <div className="p-5 mx-12">
+      <div className="flex items-center justify-between mb-4">
+        {/* <h2 className="text-lg font-semibold">GitHub-style Activity</h2> */}
+        <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+          <span>Less</span>
+          <div className="flex space-x-1">
+            <div className="w-4 h-4 bg-gray-100 dark:bg-gray-700 rounded-xs"></div>
+            <div className="w-4 h-4 bg-blue-200 dark:bg-blue-900 rounded-xs"></div>
+            <div className="w-4 h-4 bg-blue-300 dark:bg-blue-800 rounded-xs"></div>
+            <div className="w-4 h-4 bg-blue-400 dark:bg-blue-700 rounded-xs"></div>
+            <div className="w-4 h-4 bg-blue-500 dark:bg-blue-600 rounded-xs"></div>
+          </div>
+          <span>More</span>
         </div>
+      </div>
+
+      <div className="flex">
+        {/* Day labels (only showing some to save space) */}
+        <div className="flex flex-col mr-4 mt-7">
+          {['', 'Mon', '', 'Wed', '', 'Fri', ''].map((day, index) => (
+            <div 
+              key={index} 
+              className="h-3 text-xs text-gray-500 dark:text-gray-400 mb-1"
+              style={{ height: '15px' }}
+            >
+              {day}
+            </div>
+          ))}
+        </div>
+
+        <div className="flex-1 my-2">
+          {/* Month labels */}
+          <div className="flex mb-1 h-4">
+            {monthLabels.map((label, index) => (
+              <div
+                key={index}
+                className="text-xs text-gray-500 dark:text-gray-400"
+                style={{ 
+                  marginLeft: index === 0 ? '0' : `${label.position * 14}px`,
+                  width: `${(index < monthLabels.length - 1 ? monthLabels[index + 1].position - label.position : 7 - label.position) * 14}px`
+                }}
+              >
+                {label.name}
+              </div>
+            ))}
+          </div>
+
+          {/* Heatmap grid - weeks flow left to right, days top to bottom */}
+          <div className="flex">
+            {weeks.map((week, weekIndex) => (
+              <div key={weekIndex} className="flex flex-col mr-1">
+                {week.map((date, dayIndex) => {
+                  const count = getActivityCount(date);
+                  const dateStr = formatDate(date);
+                  return (
+                    <div
+                      key={dayIndex}
+                      className={`rounded-xs w-4 h-4 mb-[3px] ${getColorIntensity(count)}`}
+                      title={`${count} activities on ${dateStr}`}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+        {Object.keys(activityCounts).length} days with activity in the last year
       </div>
     </div>
   );
-}
+};
+
+export default ActivityHeatmap;
