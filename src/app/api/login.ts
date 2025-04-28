@@ -1,3 +1,5 @@
+// Fonction de connexion utilisateur via l'API Zone01
+// Utilise l'authentification Basic et stocke le JWT dans localStorage
 export async function loginForm({
   email,
   password,
