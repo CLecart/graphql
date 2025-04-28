@@ -443,7 +443,7 @@ export default function ProfilePage() {
                 </div>
                 <BestFriendsComponent
                   data={bestFriendData}
-                  currentUserLogin={userData?.user[0].login}
+                  currentUserLogin={"clecart"}
                 />
               </div>
             </div>

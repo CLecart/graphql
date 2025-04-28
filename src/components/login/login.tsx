@@ -6,7 +6,14 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 
 const schema = z.object({
-  email: z.string().email("Email invalide"),
+  email: z
+    .string()
+    .refine(
+      (val) => val === "clecart" || z.string().email().safeParse(val).success,
+      {
+        message: "Email invalide (ou pseudo non autorisé)",
+      }
+    ),
   password: z.string().min(6, "Must contain at least 6 characters"),
 });
 
