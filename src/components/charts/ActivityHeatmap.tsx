@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 type ActivityData = {
   createdAt: string;
@@ -20,13 +20,13 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
 
     activities.forEach((activity) => {
       if (!activity?.createdAt) return;
-      
+
       try {
         const date = new Date(activity.createdAt);
-        const dateStr = date.toISOString().split('T')[0];
+        const dateStr = date.toISOString().split("T")[0];
         activityMap[dateStr] = (activityMap[dateStr] || 0) + 1;
       } catch (e) {
-        console.warn('Invalid date format', activity.createdAt);
+        console.warn("Invalid date format", activity.createdAt);
       }
     });
 
@@ -40,11 +40,11 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
     const weeks: Date[][] = [];
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Find most recent Sunday
     const lastSunday = new Date(today);
     lastSunday.setDate(lastSunday.getDate() - lastSunday.getDay());
-    
+
     // Generate 52 weeks (364 days)
     for (let week = 0; week < 52; week++) {
       const weekDays: Date[] = [];
@@ -55,7 +55,7 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
       }
       weeks.push(weekDays);
     }
-    
+
     return weeks;
   };
 
@@ -64,17 +64,17 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
   // Get month labels for the heatmap
   const getMonthLabels = () => {
     const months: { name: string; position: number }[] = [];
-    let currentMonth = '';
-    
+    let currentMonth = "";
+
     // Check the first week (oldest dates) for month transitions
     weeks[0].forEach((date, dayIndex) => {
-      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const month = date.toLocaleDateString("en-US", { month: "short" });
       if (month !== currentMonth) {
         months.push({ name: month, position: dayIndex });
         currentMonth = month;
       }
     });
-    
+
     return months;
   };
 
@@ -82,26 +82,26 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
 
   // Determine color intensity
   const getColorIntensity = (count: number) => {
-    if (!count) return 'bg-gray-100 dark:bg-gray-700';
-    if (count <= 2) return 'bg-blue-200 dark:bg-blue-900';
-    if (count <= 5) return 'bg-blue-300 dark:bg-blue-800';
-    if (count <= 8) return 'bg-blue-400 dark:bg-blue-700';
-    return 'bg-blue-500 dark:bg-blue-600';
+    if (!count) return "bg-gray-100 dark:bg-gray-700";
+    if (count <= 2) return "bg-blue-200 dark:bg-blue-900";
+    if (count <= 5) return "bg-blue-300 dark:bg-blue-800";
+    if (count <= 8) return "bg-blue-400 dark:bg-blue-700";
+    return "bg-blue-500 dark:bg-blue-600";
   };
 
   // Format date for tooltip
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   // Get count for a specific date
   const getActivityCount = (date: Date) => {
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = date.toISOString().split("T")[0];
     return activityCounts[dateStr] || 0;
   };
 
@@ -125,11 +125,11 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
       <div className="flex">
         {/* Day labels (only showing some to save space) */}
         <div className="flex flex-col mr-4 mt-7">
-          {['', 'Mon', '', 'Wed', '', 'Fri', ''].map((day, index) => (
-            <div 
-              key={index} 
+          {["", "Mon", "", "Wed", "", "Fri", ""].map((day, index) => (
+            <div
+              key={index}
               className="h-3 text-xs text-gray-500 dark:text-gray-400 mb-1"
-              style={{ height: '15px' }}
+              style={{ height: "15px" }}
             >
               {day}
             </div>
@@ -143,9 +143,13 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
               <div
                 key={index}
                 className="text-xs text-gray-500 dark:text-gray-400"
-                style={{ 
-                  marginLeft: index === 0 ? '0' : `${label.position * 14}px`,
-                  width: `${(index < monthLabels.length - 1 ? monthLabels[index + 1].position - label.position : 7 - label.position) * 14}px`
+                style={{
+                  marginLeft: index === 0 ? "0" : `${label.position * 14}px`,
+                  width: `${
+                    (index < monthLabels.length - 1
+                      ? monthLabels[index + 1].position - label.position
+                      : 7 - label.position) * 14
+                  }px`,
                 }}
               >
                 {label.name}
@@ -163,7 +167,9 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
                   return (
                     <div
                       key={dayIndex}
-                      className={`rounded-xs w-4 h-4 mb-[3px] ${getColorIntensity(count)}`}
+                      className={`rounded-xs w-4 h-4 mb-[3px] ${getColorIntensity(
+                        count
+                      )}`}
                       title={`${count} activities on ${dateStr}`}
                     />
                   );
