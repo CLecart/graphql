@@ -47,26 +47,24 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
   const milestone = Math.floor(totalUniqueConnections / 10) * 10 + 10;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg">
-      {/* <h1 className="text-2xl font-bold mb-6 text-gray-800">Your Coding Companions</h1> */}
-
+    <div className="max-w-4xl mx-auto p-6 bg-card rounded-lg">
       {/* People Counter Section */}
-      <div className="mb-8 p-4 bg-purple-50 rounded-lg">
+      <div className="mb-8 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-lg font-semibold text-purple-800">
+          <h2 className="text-lg font-semibold text-purple-800 dark:text-purple-300">
             People you've worked with
           </h2>
-          <span className="text-purple-600 font-bold">
+          <span className="text-purple-600 dark:text-purple-400 font-bold">
             {totalUniqueConnections}
           </span>
         </div>
-        <div className="w-full bg-purple-200 rounded-full h-4">
+        <div className="w-full bg-purple-200 dark:bg-purple-800/30 rounded-full h-4">
           <div
-            className="bg-purple-600 h-4 rounded-full transition-all duration-500"
+            className="bg-purple-600 dark:bg-purple-500 h-4 rounded-full transition-all duration-500"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
-        <p className="text-sm text-purple-500 mt-2">
+        <p className="text-sm text-purple-500 dark:text-purple-400 mt-2">
           {progressPercentage > 0 ? (
             <>
               Only {10 - (totalUniqueConnections % 10)} more to reach{" "}
@@ -80,20 +78,20 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {/* Best Friends Section */}
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4 text-blue-800">
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-300">
             Top 5 Best Friends
           </h2>
           {bestFriends.length > 0 ? (
             <ul className="space-y-3">
               {bestFriends.map((friend, index) => (
                 <li key={friend.login} className="flex items-center">
-                  <span className="bg-blue-100 text-blue-800 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                  <span className="bg-blue-100 dark:bg-blue-800/50 text-blue-800 dark:text-blue-300 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-3">
                     {index + 1}
                   </span>
-                  <span className="text-gray-700">
+                  <span className="text-gray-700 dark:text-gray-200">
                     {friend.login}{" "}
-                    <span className="text-blue-600">
+                    <span className="text-blue-600 dark:text-blue-400">
                       ({friend.count} groups together)
                     </span>
                   </span>
@@ -101,25 +99,27 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500">No frequent collaborators found</p>
+            <p className="text-gray-500 dark:text-gray-400">
+              No frequent collaborators found
+            </p>
           )}
         </div>
 
         {/* New Connections Section */}
-        <div className="bg-green-50 p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4 text-green-800">
+        <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-300">
             Latest New Connections
           </h2>
           {newConnections.length > 0 ? (
             <ul className="space-y-3">
               {newConnections.map((person, index) => (
                 <li key={person.login} className="flex items-center">
-                  <span className="bg-green-100 text-green-800 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                  <span className="bg-green-100 dark:bg-green-800/50 text-green-800 dark:text-green-300 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-3">
                     {index + 1}
                   </span>
-                  <span className="text-gray-700">
+                  <span className="text-gray-700 dark:text-gray-200">
                     {person.login}{" "}
-                    <span className="text-green-600">
+                    <span className="text-green-600 dark:text-green-400">
                       (since {new Date(person.firstMet).toLocaleDateString()})
                     </span>
                   </span>
@@ -127,7 +127,9 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
               ))}
             </ul>
           ) : (
-            <p className="text-gray-500">No new connections found</p>
+            <p className="text-gray-500 dark:text-gray-400">
+              No new connections found
+            </p>
           )}
         </div>
       </div>

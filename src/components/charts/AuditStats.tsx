@@ -63,17 +63,17 @@ const AuditList: React.FC<AuditListProps> = ({ data }) => {
         {audits.map((audit, index) => (
           <div
             key={index}
-            className="bg-white rounded-lg shadow p-4 border border-gray-200"
+            className="bg-card rounded-lg shadow p-4 border border-border"
           >
             <div className="flex justify-between items-start mb-2">
               <div>
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="text-lg font-semibold text-foreground">
                   {audit.group.object.name}
-                  <span className="ml-2 text-sm font-normal text-gray-500">
+                  <span className="ml-2 text-sm font-normal text-muted-foreground">
                     ({audit.group.object.type})
                   </span>
                 </h2>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   {formatDate(audit.createdAt)}
                 </p>
               </div>
@@ -81,8 +81,8 @@ const AuditList: React.FC<AuditListProps> = ({ data }) => {
               <div
                 className={`px-3 py-1 rounded-full text-sm font-medium ${
                   audit.grade !== null
-                    ? "bg-green-100 text-green-800"
-                    : "bg-red-100 text-red-800"
+                    ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                    : "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
                 }`}
               >
                 {audit.grade !== null ? "Completed" : "Not done"}
@@ -90,16 +90,16 @@ const AuditList: React.FC<AuditListProps> = ({ data }) => {
             </div>
 
             <div className="mt-3">
-              <h3 className="text-sm font-medium text-gray-700 mb-1">
+              <h3 className="text-sm font-medium text-muted-foreground mb-1">
                 Group Members:
               </h3>
               <div className="flex flex-wrap gap-2">
                 {audit.group.members.map((member, memberIndex) => (
                   <div
                     key={memberIndex}
-                    className="bg-gray-50 px-3 py-1 rounded-full text-sm text-gray-700 flex items-center"
+                    className="bg-accent/50 dark:bg-accent/30 px-3 py-1 rounded-full text-sm text-foreground flex items-center"
                   >
-                    <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+                    <span className="inline-block w-2 h-2 rounded-full bg-primary mr-2"></span>
                     {member.user.login} (ID: {member.user.id})
                   </div>
                 ))}
