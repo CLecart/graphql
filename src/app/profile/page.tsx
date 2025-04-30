@@ -429,13 +429,11 @@ export default function ProfilePage() {
                   <h2 className="text-xl font-semibold mb-2">Skills tree</h2>
                 </div>
                 {skillsData?.user?.[0]?.transactions && (
-                  <div className="bg-card rounded-xl p-6 shadow border border-border">
-                    <SpiderWebChart
-                      data={skillsData.user[0].transactions}
-                      width={500}
-                      height={500}
-                    />
-                  </div>
+                  <SpiderWebChart
+                    data={skillsData.user[0].transactions}
+                    width={500}
+                    height={500}
+                  />
                 )}
               </div>
 

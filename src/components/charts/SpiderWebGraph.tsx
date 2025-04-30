@@ -119,8 +119,8 @@ export function SpiderWebChart({
         "http://www.w3.org/2000/svg",
         "text"
       );
-      text.setAttribute("x", (Math.cos(angle) * (radius + 20)).toString());
-      text.setAttribute("y", (Math.sin(angle) * (radius + 20)).toString());
+      text.setAttribute("x", (Math.cos(angle) * (radius + 30)).toString());
+      text.setAttribute("y", (Math.sin(angle) * (radius + 30)).toString());
       text.setAttribute("text-anchor", "middle");
       text.setAttribute("fill", "#334155");
       text.setAttribute("font-size", "12");
