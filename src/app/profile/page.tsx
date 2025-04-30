@@ -1,13 +1,11 @@
 "use client";
 
-import { CheckCircle2, Clock } from "lucide-react";
 import { useQuery } from "@apollo/client";
 import {
   GET_USER_INFO,
   GET_USER_XP,
   GET_USER_PROGRESS,
   GET_USER_RESULTS,
-  GET_USER_AUDITS,
   GET_USER_DETAILED_XP,
   GET_USER_SKILLS,
   GET_BEST_FRIEND,
@@ -18,11 +16,6 @@ import {
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { XPChart } from "@/components/charts/XPChart";
-import { ProjectsChart } from "@/components/charts/ProjectsChart";
-import { XPByProjectChart } from "@/components/charts/XPByProjectChart";
-import { SkillsRadarChart } from "@/components/charts/SkillsRadarChart";
-import ActivityHeatmap from "@/components/charts/ActivityHeatmap";
-import { Button } from "@/components/ui/button";
 import { XpTimelineChart } from "@/components/charts/XpOverTime";
 import { SpiderWebChart } from "@/components/charts/SpiderWebGraph";
 import BestFriendsComponent from "@/components/charts/BestFriends";
@@ -30,6 +23,7 @@ import RecentXPGains from "@/components/charts/RecentXpGained";
 import AuditList from "@/components/charts/AuditStats";
 import AuditPieChart from "@/components/charts/AuditPie";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import ActivityHeatmap from "@/components/charts/ActivityHeatmap";
 
 // Types
 interface Audit {
@@ -169,8 +163,7 @@ export default function ProfilePage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
+          <button
             onClick={handleLogout}
             className="flex items-center gap-2 hover:bg-destructive hover:text-white transition-colors"
           >
@@ -190,7 +183,7 @@ export default function ProfilePage() {
               <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
             Logout
-          </Button>
+          </button>
           <ThemeToggle />
         </div>
       </header>
