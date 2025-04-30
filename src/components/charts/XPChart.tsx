@@ -11,7 +11,6 @@ export function XPChart({ data }: { data: any[] }) {
   const [dimensions, setDimensions] = useState({ width: 800, height: 300 });
   const [cumulativeXP, setCumulativeXP] = useState<XPDataPoint[]>([]);
 
-  // Process data
   useEffect(() => {
     if (!data || data.length === 0) return;
 
@@ -28,7 +27,6 @@ export function XPChart({ data }: { data: any[] }) {
     setCumulativeXP(xpData);
   }, [data]);
 
-  // Update dimensions on window resize
   useEffect(() => {
     const updateDimensions = () => {
       if (svgRef.current) {
@@ -42,10 +40,8 @@ export function XPChart({ data }: { data: any[] }) {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  // Skip if no data yet
   if (cumulativeXP.length === 0) return <div>No XP data available</div>;
 
-  // Calculate scales
   const margin = { top: 20, right: 30, bottom: 30, left: 60 };
   const width = dimensions.width - margin.left - margin.right;
   const height = dimensions.height - margin.top - margin.bottom;
@@ -54,7 +50,6 @@ export function XPChart({ data }: { data: any[] }) {
   const xMax = cumulativeXP[cumulativeXP.length - 1].date;
   const yMax = cumulativeXP[cumulativeXP.length - 1].total;
 
-  // Create points for the path
   const points = cumulativeXP
     .map((d) => {
       const x =
@@ -66,7 +61,6 @@ export function XPChart({ data }: { data: any[] }) {
     })
     .join(" ");
 
-  // Format dates for x-axis ticks
   const formatDate = (date: Date) => {
     return date.toLocaleDateString("en-US", {
       month: "short",
@@ -74,7 +68,6 @@ export function XPChart({ data }: { data: any[] }) {
     });
   };
 
-  // Create x-axis ticks
   const xTicks = [0, 0.25, 0.5, 0.75, 1].map((percent) => {
     const date = new Date(
       xMin.getTime() + percent * (xMax.getTime() - xMin.getTime())
@@ -83,7 +76,6 @@ export function XPChart({ data }: { data: any[] }) {
     return { date, x };
   });
 
-  // Create y-axis ticks
   const yTicks = [0, 0.25, 0.5, 0.75, 1].map((percent) => {
     const value = Math.round(yMax * percent);
     const y = height + margin.top - height * percent;
@@ -100,7 +92,6 @@ export function XPChart({ data }: { data: any[] }) {
         viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
         className="overflow-visible"
       >
-        {/* X-axis */}
         <line
           x1={margin.left}
           y1={height + margin.top}
@@ -110,7 +101,6 @@ export function XPChart({ data }: { data: any[] }) {
           strokeWidth="2"
         />
 
-        {/* Y-axis */}
         <line
           x1={margin.left}
           y1={margin.top}
@@ -120,7 +110,6 @@ export function XPChart({ data }: { data: any[] }) {
           strokeWidth="2"
         />
 
-        {/* X-axis ticks */}
         {xTicks.map(({ date, x }, i) => (
           <g key={i}>
             <line
@@ -142,7 +131,6 @@ export function XPChart({ data }: { data: any[] }) {
           </g>
         ))}
 
-        {/* Y-axis ticks */}
         {yTicks.map(({ value, y }, i) => (
           <g key={i}>
             <line
@@ -174,7 +162,6 @@ export function XPChart({ data }: { data: any[] }) {
           </g>
         ))}
 
-        {/* Path for the line chart */}
         <polyline
           fill="none"
           stroke="var(--color-chart-1)"
@@ -182,7 +169,6 @@ export function XPChart({ data }: { data: any[] }) {
           points={points}
         />
 
-        {/* Gradient area under the curve */}
         <linearGradient id="xpGradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop
             offset="0%"

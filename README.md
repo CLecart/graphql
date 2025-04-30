@@ -32,7 +32,6 @@ Ce projet est un tableau de bord Next.js/React pour visualiser les statistiques,
 
 - **Pas de code en dur** : Les identifiants utilisateurs ne sont pas codés en dur, tout est dynamique.
 - **Séparation des responsabilités** : Les requêtes GraphQL, la logique Apollo, et les composants UI sont bien séparés.
-- **Commentaires** : Les fichiers critiques sont commentés pour faciliter la maintenance.
 - **Validation** : Le formulaire de login accepte un email ou un pseudo autorisé.
 - **Variables d’environnement** : Prise en charge possible via `.env.local`.
 - **Aucune dépendance obsolète** : Les dépendances sont à jour (voir package.json).

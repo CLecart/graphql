@@ -17,13 +17,11 @@ interface RecentXPGainsProps {
 }
 
 const RecentXPGains: React.FC<RecentXPGainsProps> = ({ transactions }) => {
-  // Function to extract project/activity name from path
   const getActivityName = (path: string) => {
     const parts = path.split("/").filter(Boolean);
     return parts[parts.length - 1].replace(/-/g, " ");
   };
 
-  // Function to format date
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), "MMM dd, yyyy HH:mm");
   };

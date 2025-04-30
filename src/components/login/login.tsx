@@ -69,7 +69,6 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
-      {/* Left side - Illustration or image */}
       <div className="hidden md:flex bg-primary/10 items-center justify-center p-8">
         <div className="max-w-md">
           <div className="text-4xl font-bold mb-4 text-primary">
@@ -80,7 +79,6 @@ export default function LoginForm() {
             visualizations of your academic journey.
           </p>
 
-          {/* Abstract SVG decoration */}
           <div className="mt-12 opacity-80">
             <svg
               viewBox="0 0 200 200"
@@ -97,7 +95,6 @@ export default function LoginForm() {
         </div>
       </div>
 
-      {/* Right side - Login form */}
       <div className="flex flex-col justify-center p-8">
         <div className="mx-auto w-full max-w-md space-y-8">
           <div>

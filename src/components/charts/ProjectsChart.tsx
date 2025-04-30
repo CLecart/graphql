@@ -13,7 +13,6 @@ export function ProjectsChart({ data }: { data: any[] }) {
   });
 
   useEffect(() => {
-    // Count passed and failed projects
     const stats = data.reduce(
       (acc, item) => {
         if (item.grade > 0) acc.pass += 1;
@@ -26,18 +25,15 @@ export function ProjectsChart({ data }: { data: any[] }) {
     setProjectStats(stats);
   }, [data]);
 
-  // Dimensions
   const width = 300;
   const height = 300;
   const radius = Math.min(width, height) / 2;
   const centerX = width / 2;
   const centerY = height / 2;
 
-  // Calculate percentages and angles
   const total = projectStats.pass + projectStats.fail;
   const passPercentage = total ? (projectStats.pass / total) * 100 : 0;
 
-  // SVG arc paths
   const createSlice = (startAngle: number, endAngle: number) => {
     const startRad = ((startAngle - 90) * Math.PI) / 180;
     const endRad = ((endAngle - 90) * Math.PI) / 180;
@@ -54,11 +50,9 @@ export function ProjectsChart({ data }: { data: any[] }) {
 
   const passAngle = (projectStats.pass / total) * 360;
 
-  // Animation settings
   const [currentAngle, setCurrentAngle] = useState(0);
 
   useEffect(() => {
-    // Animate the chart
     const timer = setTimeout(() => {
       setCurrentAngle(passAngle);
     }, 100);
@@ -69,7 +63,6 @@ export function ProjectsChart({ data }: { data: any[] }) {
   return (
     <div className="flex flex-col items-center">
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-        {/* Background circle */}
         <circle
           cx={centerX}
           cy={centerY}
@@ -78,14 +71,12 @@ export function ProjectsChart({ data }: { data: any[] }) {
           opacity="0.3"
         />
 
-        {/* Pass slice */}
         <path
           d={createSlice(0, currentAngle)}
           fill="var(--color-chart-1)"
           transform={`rotate(-90, ${centerX}, ${centerY})`}
         />
 
-        {/* Inner circle for donut chart */}
         <circle
           cx={centerX}
           cy={centerY}
@@ -93,7 +84,6 @@ export function ProjectsChart({ data }: { data: any[] }) {
           fill="var(--color-card)"
         />
 
-        {/* Text in the center */}
         <text
           x={centerX}
           y={centerY - 10}
@@ -115,7 +105,6 @@ export function ProjectsChart({ data }: { data: any[] }) {
         </text>
       </svg>
 
-      {/* Legend */}
       <div className="flex gap-8 mt-4">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full bg-[var(--color-chart-1)]"></div>

@@ -7,15 +7,12 @@ type Skill = {
 };
 
 export function SkillsRadarChart({ data }: { data: any[] }) {
-  // Déplacer TOUS les hooks au début du composant
   const [skills, setSkills] = useState<Skill[]>([]);
-  const [scale, setScale] = useState(0); // Déplacé ici en haut
+  const [scale, setScale] = useState(0);
 
-  // Extraire les compétences à partir des données progress
   useEffect(() => {
     if (!data || data.length === 0) return;
 
-    // Définir les catégories de compétences communes
     const skillCategories = [
       { key: "go", name: "Go" },
       { key: "js", name: "JavaScript" },
@@ -26,9 +23,7 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
       { key: "sql", name: "SQL" },
     ];
 
-    // Calculer les scores pour chaque catégorie
     const skillScores = skillCategories.map((category) => {
-      // Filtrer les projets qui correspondent à cette catégorie
       const categoryProjects = data.filter(
         (item) =>
           (item.path || "")
@@ -39,7 +34,6 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
             .includes(category.key.toLowerCase())
       );
 
-      // Calculer le score moyen (note moyenne)
       const totalGrade = categoryProjects.reduce(
         (sum, project) => sum + (project.grade || 0),
         0
@@ -51,14 +45,13 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
 
       return {
         name: category.name,
-        score: Math.min(Math.round(avgScore), 100), // Score max 100
+        score: Math.min(Math.round(avgScore), 100),
       };
     });
 
     setSkills(skillScores);
   }, [data]);
 
-  // Animation de l'effet d'échelle
   useEffect(() => {
     const timer = setTimeout(() => setScale(1), 100);
     return () => clearTimeout(timer);
@@ -66,16 +59,14 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
 
   if (skills.length === 0) return <div>No skills data available</div>;
 
-  // Paramètres du graphique
   const size = 300;
   const center = size / 2;
   const radius = size * 0.4;
   const angleStep = (Math.PI * 2) / skills.length;
 
-  // Points du polygone des compétences
   const skillsPoints = skills
     .map((skill, i) => {
-      const angle = i * angleStep - Math.PI / 2; // Commencer par le haut
+      const angle = i * angleStep - Math.PI / 2;
       const distance = (skill.score / 100) * radius;
       const x = center + distance * Math.cos(angle);
       const y = center + distance * Math.sin(angle);
@@ -87,7 +78,6 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
     <div className="flex flex-col items-center w-full">
       <h3 className="text-lg font-medium mb-4">Skills Overview</h3>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {/* Cercles concentriques */}
         {[0.2, 0.4, 0.6, 0.8, 1].map((level, i) => (
           <circle
             key={i}
@@ -101,7 +91,6 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
           />
         ))}
 
-        {/* Lignes des axes */}
         {skills.map((_, i) => {
           const angle = i * angleStep - Math.PI / 2;
           const x2 = center + radius * Math.cos(angle);
@@ -121,7 +110,6 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
           );
         })}
 
-        {/* Polygone des compétences */}
         <polygon
           points={skillsPoints}
           fill="var(--color-chart-1)"
@@ -135,7 +123,6 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
           }}
         />
 
-        {/* Points des compétences */}
         {skills.map((skill, i) => {
           const angle = i * angleStep - Math.PI / 2;
           const distance = (skill.score / 100) * radius;
@@ -154,7 +141,6 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
           );
         })}
 
-        {/* Étiquettes */}
         {skills.map((skill, i) => {
           const angle = i * angleStep - Math.PI / 2;
           const labelDistance = radius * 1.15;
@@ -178,7 +164,6 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
         })}
       </svg>
 
-      {/* Légende des scores */}
       <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
         {skills.map((skill, i) => (
           <div key={i} className="flex items-center gap-2">

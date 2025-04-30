@@ -108,7 +108,6 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
   return (
     <div className="p-5 mx-12">
       <div className="flex items-center justify-between mb-4">
-        {/* <h2 className="text-lg font-semibold">GitHub-style Activity</h2> */}
         <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
           <span>Less</span>
           <div className="flex space-x-1">
@@ -123,7 +122,6 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
       </div>
 
       <div className="flex">
-        {/* Day labels (only showing some to save space) */}
         <div className="flex flex-col mr-4 mt-7">
           {["", "Mon", "", "Wed", "", "Fri", ""].map((day, index) => (
             <div
@@ -137,7 +135,6 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
         </div>
 
         <div className="flex-1 my-2">
-          {/* Month labels */}
           <div className="flex mb-1 h-4">
             {monthLabels.map((label, index) => (
               <div
@@ -157,7 +154,6 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
             ))}
           </div>
 
-          {/* Heatmap grid - weeks flow left to right, days top to bottom */}
           <div className="flex">
             {weeks.map((week, weekIndex) => (
               <div key={weekIndex} className="flex flex-col mr-1">

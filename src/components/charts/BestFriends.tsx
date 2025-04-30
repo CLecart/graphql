@@ -35,11 +35,9 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
     return <div>No data available</div>;
   }
 
-  // Process data to find best friends, new connections, and total unique connections
   const { bestFriends, newConnections, totalUniqueConnections } =
     processFriendsData(data.user[0].groups, currentUserLogin);
 
-  // Calculate progress (every 10 people)
   const progressPercentage = Math.min(
     100,
     Math.floor((totalUniqueConnections % 10) * 10)
@@ -48,7 +46,6 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-card rounded-lg">
-      {/* People Counter Section */}
       <div className="mb-8 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-lg font-semibold text-purple-800 dark:text-purple-300">
@@ -77,7 +74,6 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* Best Friends Section */}
         <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
           <h2 className="text-xl font-semibold mb-4 text-blue-800 dark:text-blue-300">
             Top 5 Best Friends
@@ -105,7 +101,6 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
           )}
         </div>
 
-        {/* New Connections Section */}
         <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
           <h2 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-300">
             Latest New Connections
@@ -137,7 +132,6 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
   );
 };
 
-// Updated helper function to also return total unique connections
 function processFriendsData(groups: GroupData[], currentUserLogin: string) {
   const friendCounts: Record<string, { count: number; firstMet: string }> = {};
   const allConnections: Array<{ login: string; firstMet: string }> = [];

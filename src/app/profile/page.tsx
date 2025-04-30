@@ -48,7 +48,6 @@ interface Audit {
     }[];
   };
 }
-// First, define your TypeScript interfaces
 interface TransactionObject {
   name: string;
   type: string;
@@ -75,14 +74,12 @@ export default function ProfilePage() {
   const [isClient, setIsClient] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
-  // Requêtes GraphQL
   const { data: userData, loading: userLoading } = useQuery(GET_USER_INFO);
   const { data: xpData, loading: xpLoading } = useQuery(GET_USER_XP);
   const { data: progressData, loading: progressLoading } =
     useQuery(GET_USER_PROGRESS);
   const { data: resultsData, loading: resultsLoading } =
     useQuery(GET_USER_RESULTS);
-  // const { data: auditsData, loading: auditsLoading } = useQuery(GET_USER_AUDITS);
   const { data: detailedXpData, loading: detailedXpLoading } =
     useQuery(GET_USER_DETAILED_XP);
   const { data: skillsData, loading: skillsLoading } =
@@ -94,7 +91,6 @@ export default function ProfilePage() {
   const { data: auditData, loading: auditLoading } = useQuery(GET_AUDITS);
   const { data: projectData, loading: projectLoading } = useQuery(GET_PROJECTS);
 
-  // Vérification d'authentification côté client
   useEffect(() => {
     setIsClient(true);
     const token = localStorage.getItem("jwt_token");
@@ -103,30 +99,23 @@ export default function ProfilePage() {
     }
   }, [router]);
 
-  // Déconnexion
   const handleLogout = () => {
     localStorage.removeItem("jwt_token");
     router.push("/login");
   };
 
-  // Calcul des statistiques
   const totalXP = xpData?.cursusXpAggregate?.aggregate?.sum?.amount || 0;
   const completedProjects =
     progressData?.progress?.filter((p: { grade: number }) => p.grade > 0)
       .length || 0;
-  // const totalAudits = auditsData?.audit?.length || 0;
-  // console.log("userData: ", progressData);
 
-  // Activity graph data (github graph)
   const activityGraphData = activityData?.user?.[0]?.progresses || [];
 
-  // Number of projects done
   const projectCount =
     projectData?.user?.[0]?.transactions?.filter(
       (transaction: Transaction) => transaction.object?.type === "project"
     ).length || 0;
 
-  // État de chargement
   const isLoading =
     userLoading ||
     xpLoading ||
@@ -147,10 +136,8 @@ export default function ProfilePage() {
     );
   }
 
-  // Vérification SSR
   if (!isClient) return null;
 
-  // Fonction utilitaire pour extraire les attributs utilisateur
   const getAttrsValue = (
     attrs: any,
     key: string,
@@ -171,16 +158,8 @@ export default function ProfilePage() {
     return defaultValue;
   };
 
-  // Combiner les données pour l'activité
-  // const allActivityData = [
-  //   ...(xpData?.transaction || []),
-  //   ...(progressData?.progress || []),
-  //   ...(resultsData?.result || [])
-  // ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/40">
-      {/* Header avec effet blur */}
       <header className="sticky top-0 z-10 backdrop-blur-md bg-background/80 px-8 py-4 border-b border-border/40 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold mr-3">
@@ -217,7 +196,6 @@ export default function ProfilePage() {
       </header>
 
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Navigation des onglets */}
         <div className="mb-8 border-b border-border">
           <div className="flex space-x-4 overflow-x-auto pb-1">
             <button
@@ -250,23 +228,11 @@ export default function ProfilePage() {
             >
               Audits
             </button>
-            {/* <button
-              className={`px-4 py-2 font-medium transition-colors ${
-                activeTab === 'activity' 
-                  ? 'text-primary border-b-2 border-primary' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-              onClick={() => setActiveTab('activity')}
-            >
-              Activity
-            </button> */}
           </div>
         </div>
 
-        {/* Contenu de l'onglet Overview */}
         {activeTab === "overview" && (
           <>
-            {/* Carte d'informations utilisateur et XP */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
               <div className="col-span-1 bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
                 <div className="bg-primary/10 p-6">
@@ -308,15 +274,12 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              {/* XP Card with centered content */}
               <div className="col-span-2 bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
                 <div className="bg-primary/10 p-6 text-center">
                   <h2 className="text-xl font-semibold">Experience Overview</h2>
                 </div>
                 <div className="p-6">
-                  {/* First row - 3 items */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    {/* XP */}
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Total XP
@@ -326,7 +289,6 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    {/* Projects */}
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Projects
@@ -334,7 +296,6 @@ export default function ProfilePage() {
                       <p className="text-3xl font-bold">{projectCount}</p>
                     </div>
 
-                    {/* Total Audits */}
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Total Audits
@@ -345,9 +306,7 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  {/* Second row - 3 items */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {/* Completed Audits */}
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Completed Audits
@@ -359,7 +318,6 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    {/* Pending Audits */}
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Audits not completed
@@ -371,10 +329,8 @@ export default function ProfilePage() {
                       </p>
                     </div>
 
-                    {/* Pie Chart */}
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex items-center justify-center">
                       <div className="text-center">
-                        {/* <h3 className="text-sm text-muted-foreground mb-2">Audit Ratio</h3> */}
                         <div className="flex justify-center">
                           <AuditPieChart
                             completed={
@@ -393,7 +349,6 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
-                  {/* XP Chart (if available) */}
                   {xpData?.transaction && (
                     <div className="h-64 mt-6">
                       <XPChart data={xpData.transaction} />
@@ -403,7 +358,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* XP Over Time section */}
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Xp Over time</h2>
@@ -411,19 +365,7 @@ export default function ProfilePage() {
               <XpTimelineChart data={xpData?.cursusXpDetails} />
             </div>
 
-            {/* Graphiques de présentation */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-              {/* Graphique de complétion de projet */}
-              {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
-                <div className="bg-primary/10 p-6">
-                  <h2 className="text-xl font-semibold mb-2">Project Completion</h2>
-                </div>
-                <div className="p-6">
-                  {progressData?.progress && (
-                    <ProjectsChart data={progressData.progress} />
-                  )}
-                </div>
-              </div> */}
               <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
                 <div className="bg-primary/10 p-6">
                   <h2 className="text-xl font-semibold mb-2">Skills tree</h2>
@@ -437,7 +379,6 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              {/* Graphique des compétences */}
               <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
                 <div className="bg-primary/10 p-6">
                   <h2 className="text-xl font-semibold mb-2">
@@ -451,7 +392,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Carte d'activité */}
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Activity Heatmap</h2>
@@ -460,208 +400,33 @@ export default function ProfilePage() {
                 <ActivityHeatmap data={activityGraphData} />
               </div>
             </div>
-
-            {/* Projets récents */}
-            {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50"> */}
-            {/* <div className="p-6">
-                <div className="overflow-hidden">
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="text-left pb-3 text-muted-foreground">Project Name</th>
-                        <th className="text-center pb-3 text-muted-foreground">Type</th>
-                        <th className="text-center pb-3 text-muted-foreground">Date</th>
-                        <th className="text-right pb-3 text-muted-foreground">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {resultsData?.result?.slice(0, 8).map((result: any) => {
-                        const projectName = result.path?.split('/').pop() || 'Unknown Project';
-                        const date = new Date(result.createdAt);
-                        const formattedDate = date.toLocaleDateString();
-                        
-                        return (
-                          <tr key={result.id} className="border-b border-border/30 last:border-0">
-                            <td className="py-3 truncate max-w-[200px]">
-                              {projectName}
-                            </td>
-                            <td className="py-3 text-center">
-                              {result.object?.type || 'Unknown'}
-                            </td>
-                            <td className="py-3 text-center text-sm text-muted-foreground">
-                              {formattedDate}
-                            </td>
-                            <td className="py-3 text-right">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                result.grade > 0 
-                                  ? 'bg-chart-1/20 text-chart-1' 
-                                  : 'bg-destructive/20 text-destructive'
-                              }`}>
-                                {result.grade > 0 ? 'PASS' : 'FAIL'}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div> */}
-            {/* </div> */}
           </>
         )}
 
-        {/* Contenu de l'onglet Projects */}
         {activeTab === "projects" && (
           <>
-            {/* Graphique des XP par projet */}
-            {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
-              <div className="bg-primary/10 p-6">
-                <h2 className="text-xl font-semibold mb-2">XP by Project</h2>
-              </div>
-              <div className="p-6">
-                {detailedXpData?.transaction && (
-                  <XPByProjectChart data={detailedXpData.transaction} />
-                )}
-              </div>
-            </div> */}
-
-            {/* Liste complète des projets */}
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">All Xp gains</h2>
               </div>
               <RecentXPGains transactions={detailedXpData.transaction} />
-              {/* <div className="p-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="text-left pb-3 text-muted-foreground">Project Name</th>
-                        <th className="text-center pb-3 text-muted-foreground">Type</th>
-                        <th className="text-center pb-3 text-muted-foreground">Path</th>
-                        <th className="text-center pb-3 text-muted-foreground">Date</th>
-                        <th className="text-center pb-3 text-muted-foreground">Grade</th>
-                        <th className="text-right pb-3 text-muted-foreground">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {resultsData?.result?.map((result: any) => {
-                        const projectName = result.path?.split('/').pop() || 'Unknown Project';
-                        const date = new Date(result.createdAt);
-                        const formattedDate = date.toLocaleDateString();
-                        
-                        return (
-                          <tr key={result.id} className="border-b border-border/30 last:border-0">
-                            <td className="py-3 truncate max-w-[200px]">
-                              {projectName}
-                            </td>
-                            <td className="py-3 text-center text-sm">
-                              {result.object?.type || 'Unknown'}
-                            </td>
-                            <td className="py-3 text-center text-sm text-muted-foreground truncate max-w-[300px]">
-                              {result.path}
-                            </td>
-                            <td className="py-3 text-center text-sm text-muted-foreground">
-                              {formattedDate}
-                            </td>
-                            <td className="py-3 text-center font-mono">
-                              {result.grade}
-                            </td>
-                            <td className="py-3 text-right">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                result.grade > 0 
-                                  ? 'bg-chart-1/20 text-chart-1' 
-                                  : 'bg-destructive/20 text-destructive'
-                              }`}>
-                                {result.grade > 0 ? 'PASS' : 'FAIL'}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div> */}
             </div>
           </>
         )}
 
-        {/* Contenu de l'onglet Skills & Metrics */}
         {activeTab === "skills" && (
           <>
-            {/* Graphique radar des compétences */}
-            {/* <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
-              <div className="bg-primary/10 p-6">
-                <h2 className="text-xl font-semibold mb-2">Skills Radar</h2>
-              </div>
-              <div className="p-6">
-                {skillsData?.progress && (
-                  <div className="flex justify-center">
-                    <SkillsRadarChart data={skillsData.progress} />
-                  </div>
-                )}
-              </div>
-            </div> */}
-
-            {/* Historique des audits */}
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Audit History</h2>
               </div>
               <AuditList data={auditData} />
-              {/* <div className="p-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr>
-                        <th className="text-left pb-3 text-muted-foreground">ID</th>
-                        <th className="text-center pb-3 text-muted-foreground">Grade</th>
-                        <th className="text-center pb-3 text-muted-foreground">Date</th>
-                        <th className="text-right pb-3 text-muted-foreground">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {auditsData?.audit?.map((audit: any) => {
-                        const date = new Date(audit.createdAt);
-                        const formattedDate = date.toLocaleDateString();
-                        
-                        return (
-                          <tr key={audit.id} className="border-b border-border/30 last:border-0">
-                            <td className="py-3 font-mono">
-                              {audit.id}
-                            </td>
-                            <td className="py-3 text-center font-mono">
-                              {audit.grade?.toFixed(2) || 'N/A'}
-                            </td>
-                            <td className="py-3 text-center text-sm text-muted-foreground">
-                              {formattedDate}
-                            </td>
-                            <td className="py-3 text-right">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                audit.grade >= 1 
-                                  ? 'bg-chart-1/20 text-chart-1' 
-                                  : 'bg-destructive/20 text-destructive'
-                              }`}>
-                                {audit.grade >= 1 ? 'PASS' : 'FAIL'}
-                              </span>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              </div> */}
             </div>
           </>
         )}
 
-        {/* Contenu de l'onglet Activity */}
         {activeTab === "activity" && (
           <>
-            {/* Graphique d'activité */}
             <div className="bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 mb-8">
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Activity Heatmap</h2>
@@ -674,7 +439,6 @@ export default function ProfilePage() {
         )}
       </div>
 
-      {/* Footer */}
       <footer className="mt-16 py-6 border-t border-border/40">
         <div className="container mx-auto px-4 text-center text-muted-foreground text-sm">
           © {new Date().getFullYear()} Zone01 Profile Dashboard

@@ -7,11 +7,9 @@ const AuditPieChart = ({ completed, pending }: AuditPieChartProps) => {
   const total = completed + pending;
   const completedPercentage = total > 0 ? (completed / total) * 100 : 0;
 
-  // SVG circle parameters
   const radius = 30;
   const circumference = 2 * Math.PI * radius;
 
-  // Calculate stroke-dasharray and stroke-dashoffset for pie segments
   const completedDash = (completedPercentage / 100) * circumference;
   const pendingDash = circumference - completedDash;
 
@@ -25,7 +23,6 @@ const AuditPieChart = ({ completed, pending }: AuditPieChartProps) => {
       >
         {total > 0 ? (
           <>
-            {/* Background circle */}
             <circle
               cx="50"
               cy="50"
@@ -35,24 +32,22 @@ const AuditPieChart = ({ completed, pending }: AuditPieChartProps) => {
               strokeWidth="8"
             />
 
-            {/* Pending segment - drawn first */}
             <circle
               cx="50"
               cy="50"
               r={radius}
               fill="transparent"
-              stroke="#f87171d9" /* yellow-500 */
+              stroke="#f87171d9"
               strokeWidth="8"
               strokeDasharray={`${circumference}`}
             />
 
-            {/* Completed segment - drawn on top */}
             <circle
               cx="50"
               cy="50"
               r={radius}
               fill="transparent"
-              stroke="#10B981" /* green-500 */
+              stroke="#10B981"
               strokeWidth="8"
               strokeDasharray={`${completedDash} ${pendingDash}`}
             />
@@ -63,13 +58,12 @@ const AuditPieChart = ({ completed, pending }: AuditPieChartProps) => {
             cy="50"
             r={radius}
             fill="transparent"
-            stroke="#D1D5DB" /* gray-300 */
+            stroke="#D1D5DB"
             strokeWidth="8"
           />
         )}
       </svg>
 
-      {/* Display percentages in the center */}
       {total > 0 && (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
           <div className="text-sm font-medium text-green-600">

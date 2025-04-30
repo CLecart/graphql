@@ -21,7 +21,6 @@ export function XpTimelineChart({
   useEffect(() => {
     if (!svgRef.current || !data || data.length === 0) return;
 
-    // Process data to get cumulative XP and dates
     const sortedData = [...data].sort(
       (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
@@ -37,30 +36,25 @@ export function XpTimelineChart({
       };
     });
 
-    // Sample data points to avoid overcrowding (every nth point)
     const sampleEvery = Math.max(1, Math.floor(processedData.length / 15));
     const sampledData = processedData.filter(
       (_, index) =>
         index % sampleEvery === 0 || index === processedData.length - 1
     );
 
-    // Calculate dimensions and scales
     const svg = svgRef.current;
     const margin = { top: 30, right: 50, bottom: 50, left: 70 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    // Clear previous content
     while (svg.firstChild) {
       svg.removeChild(svg.firstChild);
     }
 
-    // Create group for margin convention
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("transform", `translate(${margin.left},${margin.top})`);
     svg.appendChild(g);
 
-    // Calculate scales
     const minDate = new Date(
       Math.min(...sampledData.map((d) => d.date.getTime()))
     );
@@ -80,7 +74,6 @@ export function XpTimelineChart({
       return innerHeight - (xp / maxXp) * innerHeight;
     };
 
-    // Helper function to create SVG lines
     const createLine = (
       x1: number,
       y1: number,
@@ -107,7 +100,6 @@ export function XpTimelineChart({
       return line;
     };
 
-    // Create a background grid (optional, for better visual)
     const yGridTicks = 10;
     for (let i = 0; i <= yGridTicks; i++) {
       const yValue = (maxXp / yGridTicks) * i;
@@ -115,11 +107,9 @@ export function XpTimelineChart({
       createLine(0, yPos, innerWidth, yPos, "#e5e7eb", "1", "4");
     }
 
-    // X and Y axes (main axes)
     createLine(0, innerHeight, innerWidth, innerHeight, "#6b7280", "1.5");
     createLine(0, 0, 0, innerHeight, "#6b7280", "1.5");
 
-    // Add title
     const title = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "text"
@@ -133,7 +123,6 @@ export function XpTimelineChart({
     title.textContent = "XP Progress Timeline";
     g.appendChild(title);
 
-    // Add Y axis labels
     const yTicks = 5;
     for (let i = 0; i <= yTicks; i++) {
       const yValue = (maxXp / yTicks) * i;
@@ -155,7 +144,6 @@ export function XpTimelineChart({
       g.appendChild(text);
     }
 
-    // Add Y axis title
     const yAxisTitle = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "text"
@@ -170,7 +158,6 @@ export function XpTimelineChart({
     yAxisTitle.textContent = "Cumulative XP";
     g.appendChild(yAxisTitle);
 
-    // Add X axis labels (dates)
     const xTicks = 5;
     for (let i = 0; i <= xTicks; i++) {
       const date = new Date(
@@ -197,7 +184,6 @@ export function XpTimelineChart({
       g.appendChild(text);
     }
 
-    // Add X axis title
     const xAxisTitle = document.createElementNS(
       "http://www.w3.org/2000/svg",
       "text"
@@ -210,7 +196,6 @@ export function XpTimelineChart({
     xAxisTitle.textContent = "Date";
     g.appendChild(xAxisTitle);
 
-    // Create path for the line
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
     let pathData = "";
     sampledData.forEach((point, i) => {
@@ -229,18 +214,14 @@ export function XpTimelineChart({
     path.setAttribute("stroke-width", "2.5");
     g.appendChild(path);
 
-    // Add dots and grid lines at each data point
     sampledData.forEach((point) => {
       const x = xScale(point.date);
       const y = yScale(point.xp);
 
-      // Add vertical line from point to x-axis
       createLine(x, y, x, innerHeight, "#9ca3af", "1", "3,2");
 
-      // Add horizontal line from point to y-axis
       createLine(0, y, x, y, "#9ca3af", "1", "3,2");
 
-      // Add the data point circle
       const circle = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "circle"
@@ -251,17 +232,13 @@ export function XpTimelineChart({
       circle.setAttribute("fill", "#3b82f6");
       g.appendChild(circle);
 
-      // Add tooltip on hover with smart positioning
       circle.addEventListener("mouseenter", () => {
-        // Create tooltip container
         const tooltipG = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "g"
         );
         tooltipG.setAttribute("class", "tooltip");
 
-        // Determine tooltip position based on point position
-        // If point is in the right 20% of the chart, show tooltip on the left
         const tooltipWidth = 120;
         const tooltipHeight = 50;
         const isRightSide = x > innerWidth * 0.8;
@@ -269,7 +246,6 @@ export function XpTimelineChart({
         const tooltipX = isRightSide ? x - tooltipWidth - 10 : x + 10;
         const tooltipY = y > tooltipHeight ? y - tooltipHeight / 2 : 10;
 
-        // Background rectangle
         const tooltipBg = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "rect"
@@ -284,7 +260,6 @@ export function XpTimelineChart({
         tooltipBg.setAttribute("stroke-width", "1");
         tooltipG.appendChild(tooltipBg);
 
-        // XP text
         const xpText = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "text"
@@ -297,7 +272,6 @@ export function XpTimelineChart({
         xpText.textContent = `${(point.xp / 1000).toFixed(1)}k XP`;
         tooltipG.appendChild(xpText);
 
-        // Date text
         const dateText = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "text"

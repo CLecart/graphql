@@ -6,7 +6,6 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    // On mount, check localStorage or system preference
     const saved = localStorage.getItem("theme");
     if (
       saved === "dark" ||
@@ -42,7 +41,6 @@ export default function ThemeToggle() {
       style={{ transition: "background 0.2s" }}
     >
       {theme === "dark" ? (
-        // Sun icon - centered with proper size
         <svg
           width="20"
           height="20"
@@ -57,7 +55,6 @@ export default function ThemeToggle() {
           <path d="M10 1v2M10 17v2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M1 10h2M17 10h2M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42" />
         </svg>
       ) : (
-        // Moon icon - adjusted for proper centering
         <svg
           width="20"
           height="20"

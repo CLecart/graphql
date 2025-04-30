@@ -30,7 +30,6 @@ export function SpiderWebChart({
   useEffect(() => {
     if (!svgRef.current || !data || data.length === 0) return;
 
-    // Process data to get the MAX value for each skill
     const skillMap = new Map<string, number>();
 
     data.forEach((transaction) => {
@@ -43,33 +42,27 @@ export function SpiderWebChart({
       }
     });
 
-    // Convert to array and sort by value
     const skills: SkillData[] = Array.from(skillMap.entries())
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 
-    // Take top skills
     const displaySkills = skills.slice(0, maxSkills);
     const maxValueInData = 100;
 
-    // Clear previous content
     while (svgRef.current.firstChild) {
       svgRef.current.removeChild(svgRef.current.firstChild);
     }
 
-    // Setup dimensions
     const centerX = width / 2;
     const centerY = height / 2;
     const radius = Math.min(width, height) * 0.4;
     const angleSlice = (Math.PI * 2) / displaySkills.length;
 
-    // Create SVG group
     const svg = svgRef.current;
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     g.setAttribute("transform", `translate(${centerX},${centerY})`);
     svg.appendChild(g);
 
-    // Draw background circles (levels)
     for (let level = levels; level >= 1; level--) {
       const levelRadius = (level / levels) * radius;
       const circle = document.createElementNS(
@@ -84,7 +77,6 @@ export function SpiderWebChart({
       circle.setAttribute("stroke-width", "1");
       g.appendChild(circle);
 
-      // Add level label (actual values)
       const levelValue = Math.round((maxValueInData * level) / levels);
       const text = document.createElementNS(
         "http://www.w3.org/2000/svg",
@@ -99,7 +91,6 @@ export function SpiderWebChart({
       g.appendChild(text);
     }
 
-    // Draw axes
     displaySkills.forEach((skill, i) => {
       const angle = angleSlice * i - Math.PI / 2;
       const line = document.createElementNS(
@@ -114,7 +105,6 @@ export function SpiderWebChart({
       line.setAttribute("stroke-width", "1");
       g.appendChild(line);
 
-      // Add skill name
       const text = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"
@@ -128,7 +118,6 @@ export function SpiderWebChart({
       g.appendChild(text);
     });
 
-    // Draw data polygon (using exact values)
     const polygonPoints = displaySkills
       .map((skill, i) => {
         const angle = angleSlice * i - Math.PI / 2;
@@ -149,7 +138,6 @@ export function SpiderWebChart({
     polygon.setAttribute("stroke-width", "2");
     g.appendChild(polygon);
 
-    // Add data points with exact values
     displaySkills.forEach((skill, i) => {
       const angle = angleSlice * i - Math.PI / 2;
       const valueRatio = skill.value / maxValueInData;
@@ -166,7 +154,6 @@ export function SpiderWebChart({
       circle.setAttribute("fill", "rgb(59, 130, 246)");
       g.appendChild(circle);
 
-      // Add exact value label
       const text = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "text"

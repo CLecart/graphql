@@ -57,8 +57,6 @@ const AuditList: React.FC<AuditListProps> = ({ data }) => {
 
   return (
     <div className="max-w-8xl mx-auto p-4">
-      {/* <h1 className="text-2xl font-bold mb-6 text-gray-800">Audit History</h1> */}
-
       <div className="space-y-4">
         {audits.map((audit, index) => (
           <div
