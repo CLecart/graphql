@@ -237,7 +237,7 @@ export default function ProfilePage() {
                   <div className="p-6">
                     <div className="mb-6 flex justify-center">
                       <div className="h-24 w-24 rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center text-2xl font-bold text-primary">
-                        {userData.user[0].login?.charAt(0).toUpperCase() || "U"}
+                        <img src="/favicon.ico" alt="Logo" className="h-12 w-12" />
                       </div>
                     </div>
                     <div className="space-y-3">
