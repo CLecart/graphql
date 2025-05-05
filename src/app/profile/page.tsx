@@ -156,8 +156,8 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/40">
       <header className="sticky top-0 z-10 backdrop-blur-md bg-background/80 px-8 py-4 border-b border-border/40 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold mr-3">
-            {userData?.user?.[0]?.login?.charAt(0).toUpperCase() || "U"}
+          <div className="h-10 w-10 rounded-full flex items-center justify-center text-primary-foreground font-bold mr-3 bg-black dark:bg-white">
+            <img src="/favicon.ico" alt="Logo" className="h-6 w-6" />
           </div>
           <h1 className="text-2xl font-bold">Zone01 Profile</h1>
         </div>
