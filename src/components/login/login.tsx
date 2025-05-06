@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { useTheme } from "@/app/context/ThemeContext";
 
 const schema = z.object({
   email: z
@@ -20,6 +21,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function LoginForm() {
+  const { theme } = useTheme();
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     email: "",
@@ -66,16 +68,23 @@ export default function LoginForm() {
       }
     }
   };
+  console.log(theme);
+  const logoImage = theme === "dark" ? "/logo Z01.png" : "/logo Z01light4.png";
 
   return (
     <>
       <img
         src="/vagueZ01.svg"
-        className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+        className="absolute top-0 left-0 w-screen h-full object-cover -z-10 opacity-60"
         alt="background shape"
       />
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 z-0">
-        <div className="hidden md:flex bg-primary/10 items-center justify-center p-8 z-20">
+        <div
+          className="hidden md:flex bg-primary/10 items-center justify-center p-8 z-20 ring-offset-8"
+          style={{
+            boxShadow: "0 0 4px 2px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <div className="max-w-md">
             <div className="text-4xl font-bold mb-4 text-primary">
               Zone01 GraphQL Profile
@@ -84,19 +93,12 @@ export default function LoginForm() {
               Access your student profile with detailed statistics and
               visualizations of your academic journey.
             </p>
-
             <div className="mt-12 opacity-80">
-              <svg
-                viewBox="0 0 200 200"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-64 h-64"
-              >
-                <path
-                  fill="var(--color-primary)"
-                  d="M46.5,-64.2C59.9,-55.1,69.9,-41.5,76.2,-25.9C82.4,-10.2,84.9,7.3,80.2,22.9C75.5,38.5,63.5,52.1,48.9,60.7C34.2,69.3,17.1,73,0.1,72.9C-17,72.8,-33.9,68.9,-48.4,60.1C-62.8,51.3,-74.8,37.6,-79.4,21.8C-83.9,6,-81,-11.9,-73.2,-26.9C-65.5,-41.8,-52.9,-53.7,-39.2,-62.8C-25.5,-71.8,-12.8,-77.9,1.9,-80.4C16.5,-82.9,33.1,-73.3,46.5,-64.2Z"
-                  transform="translate(100 100)"
-                />
-              </svg>
+              <img
+                src={logoImage}
+                alt="background shape"
+                className="mx-auto"
+              ></img>
             </div>
           </div>
         </div>
@@ -194,7 +196,12 @@ export default function LoginForm() {
               </Button>
             </form>
 
-            <div className="text-center text-sm text-muted-foreground mt-4">
+            <div
+              className="fon,t-bold text-center text-sm mt-4 z-0 text-black dark:text-white"
+              style={{
+                WebkitTextStroke: "0.2px white",
+              }}
+            >
               Powered by GraphQL & Next.js
             </div>
           </div>
