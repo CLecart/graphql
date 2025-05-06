@@ -82,10 +82,10 @@ export function SpiderWebChart({
         "http://www.w3.org/2000/svg",
         "text"
       );
-      text.setAttribute("x", "0");
+      text.setAttribute("x", "15");
       text.setAttribute("y", (-levelRadius - 5).toString());
       text.setAttribute("text-anchor", "middle");
-      text.setAttribute("fill", "#64748b");
+      text.setAttribute("fill", "var(--foreground)");
       text.setAttribute("font-size", "10");
       text.textContent = levelValue.toString();
       g.appendChild(text);
@@ -112,7 +112,7 @@ export function SpiderWebChart({
       text.setAttribute("x", (Math.cos(angle) * (radius + 30)).toString());
       text.setAttribute("y", (Math.sin(angle) * (radius + 30)).toString());
       text.setAttribute("text-anchor", "middle");
-      text.setAttribute("fill", "#334155");
+      text.setAttribute("fill", "var(--foreground)");
       text.setAttribute("font-size", "12");
       text.textContent = skill.name.replace(/-/g, " ").toUpperCase();
       g.appendChild(text);
@@ -161,8 +161,8 @@ export function SpiderWebChart({
       text.setAttribute("x", x.toString());
       text.setAttribute("y", (y - 8).toString());
       text.setAttribute("text-anchor", "middle");
-      text.setAttribute("fill", "#1e293b");
-      text.setAttribute("font-size", "10");
+      text.setAttribute("fill", "var(--foreground)");
+      text.setAttribute("font-size", "11");
       text.setAttribute("font-weight", "bold");
       text.textContent = `${skill.value}`;
       g.appendChild(text);

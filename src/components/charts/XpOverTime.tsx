@@ -79,7 +79,7 @@ export function XpTimelineChart({
       y1: number,
       x2: number,
       y2: number,
-      stroke = "#6b7280",
+      stroke = "#3b82f6",
       strokeWidth = "1",
       dashArray = ""
     ) => {
@@ -104,7 +104,7 @@ export function XpTimelineChart({
     for (let i = 0; i <= yGridTicks; i++) {
       const yValue = (maxXp / yGridTicks) * i;
       const yPos = yScale(yValue);
-      createLine(0, yPos, innerWidth, yPos, "#e5e7eb", "1", "4");
+      createLine(0, yPos, innerWidth, yPos, "#293C57", "1", "4");
     }
 
     createLine(0, innerHeight, innerWidth, innerHeight, "#6b7280", "1.5");
@@ -119,7 +119,7 @@ export function XpTimelineChart({
     title.setAttribute("text-anchor", "middle");
     title.setAttribute("font-size", "16");
     title.setAttribute("font-weight", "bold");
-    title.setAttribute("fill", "#1f2937");
+    title.setAttribute("fill", "var(--foreground)");
     title.textContent = "XP Progress Timeline";
     g.appendChild(title);
 
@@ -138,7 +138,7 @@ export function XpTimelineChart({
       text.setAttribute("y", yPos.toString());
       text.setAttribute("text-anchor", "end");
       text.setAttribute("dominant-baseline", "middle");
-      text.setAttribute("fill", "#6b7280");
+      text.setAttribute("fill", "var(--foreground)");
       text.setAttribute("font-size", "12");
       text.textContent = `${(yValue / 1000).toFixed(0)}k`;
       g.appendChild(text);
@@ -154,7 +154,7 @@ export function XpTimelineChart({
     );
     yAxisTitle.setAttribute("text-anchor", "middle");
     yAxisTitle.setAttribute("font-size", "14");
-    yAxisTitle.setAttribute("fill", "#4b5563");
+    yAxisTitle.setAttribute("fill", "var(--foreground)");
     yAxisTitle.textContent = "Cumulative XP";
     g.appendChild(yAxisTitle);
 
@@ -175,7 +175,7 @@ export function XpTimelineChart({
       text.setAttribute("x", xPos.toString());
       text.setAttribute("y", (innerHeight + 20).toString());
       text.setAttribute("text-anchor", "middle");
-      text.setAttribute("fill", "#6b7280");
+      text.setAttribute("fill", "var(--foreground)");
       text.setAttribute("font-size", "12");
       text.textContent = date.toLocaleDateString("en-US", {
         month: "short",
@@ -192,7 +192,7 @@ export function XpTimelineChart({
     xAxisTitle.setAttribute("y", (innerHeight + 40).toString());
     xAxisTitle.setAttribute("text-anchor", "middle");
     xAxisTitle.setAttribute("font-size", "14");
-    xAxisTitle.setAttribute("fill", "#4b5563");
+    xAxisTitle.setAttribute("fill", "var(--foreground)");
     xAxisTitle.textContent = "Date";
     g.appendChild(xAxisTitle);
 
@@ -218,9 +218,9 @@ export function XpTimelineChart({
       const x = xScale(point.date);
       const y = yScale(point.xp);
 
-      createLine(x, y, x, innerHeight, "#9ca3af", "1", "3,2");
+      createLine(x, y, x, innerHeight, "#3A6AAD", "1", "3,2");
 
-      createLine(0, y, x, y, "#9ca3af", "1", "3,2");
+      createLine(0, y, x, y, "#3A6AAD", "1", "3,2");
 
       const circle = document.createElementNS(
         "http://www.w3.org/2000/svg",

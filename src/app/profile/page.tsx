@@ -153,7 +153,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/40">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/40 color-[var(--foreground)]">
       <header className="sticky top-0 z-10 backdrop-blur-md bg-background/80 px-8 py-4 border-b border-border/40 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <div className="h-10 w-10 rounded-full flex items-center justify-center text-primary-foreground font-bold mr-3 bg-black dark:bg-white">
