@@ -77,10 +77,7 @@ export default function LoginForm() {
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 z-0">
         <div className="hidden md:flex bg-primary/10 items-center justify-center p-8 z-20">
           <div className="max-w-md">
-            <div
-              className="text-4xl font-bold mb-4 text-primary"
-              style={{ textShadow: "0 0 3px white, 0 0 5px white" }}
-            >
+            <div className="text-4xl font-bold mb-4 text-primary">
               Zone01 GraphQL Profile
             </div>
             <p className="text-lg text-muted-foreground">
