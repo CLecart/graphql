@@ -86,15 +86,7 @@ export default function LoginForm() {
           }}
         >
           <div className="max-w-md">
-            <div
-              className="text-4xl font-bold mb-4 text-primary"
-              style={{
-                textShadow:
-                  theme === "dark"
-                    ? "0 0 3px var(--color-background), 0 0 5px var(--color-background)"
-                    : "0 0 3px var(--color-foreground), 0 0 5px var(--color-foreground)",
-              }}
-            >
+            <div className="text-4xl font-bold mb-4 text-primary">
               Zone01 GraphQL Profile
             </div>
             <p className="text-lg text-muted-foreground">
