@@ -1,5 +1,4 @@
 import { formatDate, formatXp } from "@/lib/utils";
-import { format } from "date-fns";
 
 interface XPTransaction {
   id: number;
@@ -18,7 +17,7 @@ interface RecentXPGainsProps {
 }
 
 /**
- * Affiche la liste des gains récents d'XP.
+ * Affiche la liste des gains récents d'XP sous forme de cartes, façon "Audit History".
  * @param transactions - Liste des transactions XP
  */
 const RecentXPGains: React.FC<RecentXPGainsProps> = ({ transactions }) => {
@@ -27,42 +26,48 @@ const RecentXPGains: React.FC<RecentXPGainsProps> = ({ transactions }) => {
     return parts[parts.length - 1].replace(/-/g, " ");
   };
 
+  if (!transactions || transactions.length === 0) {
+    return <div className="p-4 text-gray-500">No XP gains found</div>;
+  }
+
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-border">
-        <thead>{/* Add table headers here if needed */}</thead>
-        <tbody role="list" aria-label="Recent XP gains list">
-          {transactions.map((tx, idx) => (
-            <tr
-              key={idx}
-              role="listitem"
-              aria-label={`XP gain for project ${tx.object?.name || "Unknown"}`}
-              className="hover:bg-accent/20 transition-colors"
-            >
-              <td className="border-b border-border pb-4 last:border-0 last:pb-0">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-medium text-foreground capitalize">
-                      {tx.object?.name || getActivityName(tx.path)}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {tx.path.replace(/-/g, " ").replace(/\//g, " › ")}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span className="inline-block bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-sm font-semibold px-2 py-1 rounded-full">
-                      +{formatXp(tx.amount)}
+    <div className="max-w-8xl mx-auto p-4">
+      <div className="space-y-4" role="list" aria-label="XP gains list">
+        {transactions.map((tx, idx) => (
+          <div
+            key={tx.id || idx}
+            className="bg-card rounded-lg shadow p-4 border border-border"
+            role="listitem"
+            aria-label={`XP gain for project ${
+              tx.object?.name || getActivityName(tx.path)
+            }`}
+          >
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">
+                  {tx.object?.name || getActivityName(tx.path)}
+                  {tx.object?.type && (
+                    <span className="ml-2 text-sm font-normal text-muted-foreground">
+                      ({tx.object.type})
                     </span>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {formatDate(tx.createdAt)}
-                    </p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  )}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {tx.path.replace(/-/g, " ").replace(/\//g, " › ")}
+                </p>
+              </div>
+              <div className="flex flex-col items-end">
+                <span className="inline-block bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-base font-semibold px-3 py-1 rounded-full mb-1">
+                  +{formatXp(tx.amount)}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {formatDate(tx.createdAt)}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 
 // Constantes globales pour les couleurs et dimensions
 const CHART_COLOR_1 = "var(--color-chart-1)";
-const CHART_COLOR_5 = "var(--color-chart-5)";
 const CHART_HEIGHT = 300;
 const CHART_MARGIN = { top: 20, right: 30, bottom: 30, left: 60 };
 
