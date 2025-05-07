@@ -24,6 +24,7 @@ import AuditList from "@/components/charts/AuditStats";
 import AuditPieChart from "@/components/charts/AuditPie";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import ActivityHeatmap from "@/components/charts/ActivityHeatmap";
+import Loader from "@/components/ui/Loader";
 
 // Types
 interface Audit {
@@ -124,8 +125,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-muted">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-4 text-lg font-medium">Loading your profile...</p>
+        <Loader label="Loading your profile..." size={64} />
       </div>
     );
   }
@@ -165,6 +165,7 @@ export default function ProfilePage() {
         <div className="flex items-center gap-4">
           <button
             onClick={handleLogout}
+            aria-label="Logout"
             className="flex items-center gap-2 hover:bg-destructive hover:text-white transition-colors"
           >
             <svg
@@ -198,6 +199,7 @@ export default function ProfilePage() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => setActiveTab("overview")}
+              aria-label="Show overview tab"
             >
               Overview
             </button>
@@ -208,6 +210,7 @@ export default function ProfilePage() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => setActiveTab("projects")}
+              aria-label="Show XP gains tab"
             >
               Xp gains
             </button>
@@ -218,6 +221,7 @@ export default function ProfilePage() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => setActiveTab("skills")}
+              aria-label="Show audits tab"
             >
               Audits
             </button>

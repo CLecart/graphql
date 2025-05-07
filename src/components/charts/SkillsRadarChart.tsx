@@ -12,6 +12,10 @@ const CHART_RADIUS = CHART_SIZE * 0.4;
 const CHART_CENTER = CHART_SIZE / 2;
 const LEVELS = [0.2, 0.4, 0.6, 0.8, 1];
 
+/**
+ * Affiche un radar chart des compétences principales.
+ * @param data - Liste des projets ou transactions pour calculer les scores de compétences
+ */
 export function SkillsRadarChart({ data }: { data: any[] }) {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [scale, setScale] = useState(0);

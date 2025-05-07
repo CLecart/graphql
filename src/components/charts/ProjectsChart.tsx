@@ -1,17 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const CHART_COLOR_PASS = "var(--color-chart-1)";
-const CHART_COLOR_FAIL = "var(--color-chart-5)";
-const CHART_BG = "var(--color-card)";
-const CHART_SIZE = 300;
-
+/**
+ * Statistiques de projets (réussis/échoués).
+ */
 type ProjectStats = {
   pass: number;
   fail: number;
 };
 
-export function ProjectsChart({ data }: { data: any[] }) {
+/**
+ * Props pour ProjectsChart.
+ */
+interface ProjectsChartProps {
+  data: Array<{ grade: number }>;
+}
+
+/**
+ * Affiche un diagramme circulaire du taux de réussite des projets.
+ */
+export function ProjectsChart({ data }: ProjectsChartProps) {
   const [projectStats, setProjectStats] = useState<ProjectStats>({
     pass: 0,
     fail: 0,
@@ -29,8 +37,8 @@ export function ProjectsChart({ data }: { data: any[] }) {
     setProjectStats(stats);
   }, [data]);
 
-  const width = CHART_SIZE;
-  const height = CHART_SIZE;
+  const width = 300;
+  const height = 300;
   const radius = Math.min(width, height) / 2;
   const centerX = width / 2;
   const centerY = height / 2;
@@ -72,11 +80,16 @@ export function ProjectsChart({ data }: { data: any[] }) {
           cx={centerX}
           cy={centerY}
           r={radius}
-          fill={CHART_COLOR_FAIL}
+          fill="var(--color-chart-5)"
           opacity="0.3"
         />
-        {createSlice(0, currentAngle, CHART_COLOR_PASS)}
-        <circle cx={centerX} cy={centerY} r={radius * 0.6} fill={CHART_BG} />
+        {createSlice(0, currentAngle, "var(--color-chart-1)")}
+        <circle
+          cx={centerX}
+          cy={centerY}
+          r={radius * 0.6}
+          fill="var(--color-card)"
+        />
         <text
           x={centerX}
           y={centerY - 10}
@@ -101,14 +114,14 @@ export function ProjectsChart({ data }: { data: any[] }) {
         <div className="flex items-center gap-2">
           <div
             className="w-4 h-4 rounded-full"
-            style={{ background: CHART_COLOR_PASS }}
+            style={{ background: "var(--color-chart-1)" }}
           ></div>
           <span>Pass ({projectStats.pass})</span>
         </div>
         <div className="flex items-center gap-2">
           <div
             className="w-4 h-4 rounded-full"
-            style={{ background: CHART_COLOR_FAIL }}
+            style={{ background: "var(--color-chart-5)" }}
           ></div>
           <span>Fail ({projectStats.fail})</span>
         </div>

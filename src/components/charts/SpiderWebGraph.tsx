@@ -2,11 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-interface SkillData {
-  name: string;
-  value: number; // Exact value from transactions
-}
-
 interface SkillsRadarChartProps {
   data: Array<{
     type: string;
@@ -42,7 +37,7 @@ export function SpiderWebChart({
       }
     });
 
-    const skills: SkillData[] = Array.from(skillMap.entries())
+    const skills = Array.from(skillMap.entries())
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => b.value - a.value);
 

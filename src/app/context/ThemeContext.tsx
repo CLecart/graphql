@@ -40,4 +40,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+/**
+ * Hook personnalisé pour accéder au thème courant et à la fonction de changement de thème.
+ * @returns { theme, setTheme }
+ */
 export const useTheme = () => useContext(ThemeContext);

@@ -1,17 +1,18 @@
 import React from "react";
 
-type ActivityData = {
-  createdAt: string;
-  __typename?: string;
-};
-
 type ActivityHeatmapProps = {
-  data: ActivityData[] | null | undefined;
+  data: { createdAt: string; __typename?: string }[] | null | undefined;
 };
 
+/**
+ * Affiche une heatmap d'activité façon GitHub sur 1 an.
+ * @param data - Liste des activités avec date
+ */
 const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
   // Process data to count activities per day
-  const processData = (activities: ActivityData[] | null | undefined) => {
+  const processData = (
+    activities: { createdAt: string; __typename?: string }[] | null | undefined
+  ) => {
     const activityMap: Record<string, number> = {};
 
     if (!activities || !Array.isArray(activities)) {

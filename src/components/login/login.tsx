@@ -175,6 +175,7 @@ export default function LoginForm() {
                 type="submit"
                 className="w-full py-6 text-base"
                 disabled={isLoading}
+                aria-label="Sign in to your account"
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center">

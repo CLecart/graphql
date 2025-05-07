@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDate } from "@/lib/utils";
 
 interface User {
   id: number;
@@ -44,16 +45,7 @@ const AuditList: React.FC<AuditListProps> = ({ data }) => {
 
   const audits = data.user[0].audits_as_auditor;
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  const formatDateLocal = (dateString: string) => formatDate(dateString);
 
   return (
     <div className="max-w-8xl mx-auto p-4">
@@ -72,7 +64,7 @@ const AuditList: React.FC<AuditListProps> = ({ data }) => {
                   </span>
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  {formatDate(audit.createdAt)}
+                  {formatDateLocal(audit.createdAt)}
                 </p>
               </div>
 

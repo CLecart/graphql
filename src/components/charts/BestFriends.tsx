@@ -1,22 +1,15 @@
 import React from "react";
 
-interface User {
-  login: string;
-}
-
-interface Member {
-  user: User;
-}
-
-interface Group {
-  captainId: number;
-  members: Member[];
-}
-
 interface GroupData {
   id: number;
   createdAt: string;
-  group: Group;
+  group: {
+    members: Array<{
+      user: {
+        login: string;
+      };
+    }>;
+  };
 }
 
 interface UserData {
@@ -30,6 +23,11 @@ interface Props {
   currentUserLogin: string;
 }
 
+/**
+ * Affiche les meilleurs collaborateurs et nouvelles connexions de l'utilisateur.
+ * @param data - Données des groupes de l'utilisateur
+ * @param currentUserLogin - Login de l'utilisateur courant
+ */
 const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
   if (!data?.user?.length || !data.user[0]?.groups) {
     return <div>No data available</div>;

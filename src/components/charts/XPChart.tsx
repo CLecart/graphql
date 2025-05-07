@@ -14,12 +14,28 @@ function formatDate(date: Date) {
   });
 }
 
+/**
+ * Point de données pour l'évolution de l'XP.
+ */
 type XPDataPoint = {
   date: Date;
   total: number;
 };
 
-export function XPChart({ data }: { data: any[] }) {
+/**
+ * Props pour le composant XPChart.
+ */
+interface XPChartProps {
+  data: Array<{
+    amount: number;
+    createdAt: string;
+  }>;
+}
+
+/**
+ * Affiche l'évolution de l'XP dans le temps sous forme de courbe.
+ */
+export function XPChart({ data }: XPChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [dimensions, setDimensions] = useState({
     width: 800,
@@ -31,7 +47,7 @@ export function XPChart({ data }: { data: any[] }) {
     if (!data || data.length === 0) return;
 
     let totalXP = 0;
-    const xpData = data.map((item: any) => {
+    const xpData = data.map((item) => {
       totalXP += item.amount;
       return {
         date: new Date(item.createdAt),

@@ -3,6 +3,11 @@ interface AuditPieChartProps {
   pending: number;
 }
 
+/**
+ * Affiche un diagramme circulaire du taux d'audits complétés.
+ * @param completed - Nombre d'audits complétés
+ * @param pending - Nombre d'audits en attente
+ */
 const AuditPieChart = ({ completed, pending }: AuditPieChartProps) => {
   const total = completed + pending;
   const completedPercentage = total > 0 ? (completed / total) * 100 : 0;

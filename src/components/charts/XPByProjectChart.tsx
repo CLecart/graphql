@@ -1,11 +1,25 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
+/**
+ * Données d'XP par projet.
+ */
 type ProjectXP = {
   path: string;
   amount: number;
   name: string;
 };
+
+/**
+ * Props pour le composant XPByProjectChart.
+ */
+interface XPByProjectChartProps {
+  data: Array<{
+    path: string;
+    amount: number;
+    object?: { name?: string };
+  }>;
+}
 
 // Constantes globales pour la chart
 const CHART_COLOR_1 = "var(--color-chart-1)";
@@ -17,7 +31,10 @@ function formatNumber(n: number) {
   return n.toLocaleString();
 }
 
-export function XPByProjectChart({ data }: { data: any[] }) {
+/**
+ * Affiche un graphique des projets ayant rapporté le plus d'XP.
+ */
+export function XPByProjectChart({ data }: XPByProjectChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [dimensions, setDimensions] = useState({
     width: 800,

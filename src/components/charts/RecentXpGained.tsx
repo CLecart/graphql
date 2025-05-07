@@ -1,3 +1,4 @@
+import { formatDate, formatXp } from "@/lib/utils";
 import { format } from "date-fns";
 
 interface XPTransaction {
@@ -16,14 +17,14 @@ interface RecentXPGainsProps {
   transactions: XPTransaction[];
 }
 
+/**
+ * Affiche la liste des gains récents d'XP.
+ * @param transactions - Liste des transactions XP
+ */
 const RecentXPGains: React.FC<RecentXPGainsProps> = ({ transactions }) => {
   const getActivityName = (path: string) => {
     const parts = path.split("/").filter(Boolean);
     return parts[parts.length - 1].replace(/-/g, " ");
-  };
-
-  const formatDate = (dateString: string) => {
-    return format(new Date(dateString), "MMM dd, yyyy HH:mm");
   };
 
   return (
@@ -45,7 +46,7 @@ const RecentXPGains: React.FC<RecentXPGainsProps> = ({ transactions }) => {
               </div>
               <div className="text-right">
                 <span className="inline-block bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 text-sm font-semibold px-2 py-1 rounded-full">
-                  +{tx.amount.toLocaleString()} XP
+                  +{formatXp(tx.amount)}
                 </span>
                 <p className="text-xs text-muted-foreground mt-1">
                   {formatDate(tx.createdAt)}

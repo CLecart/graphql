@@ -1,10 +1,16 @@
+/**
+ * Authentifie l'utilisateur via l'API Zone01 et stocke le JWT dans localStorage.
+ * @param email - Email ou login
+ * @param password - Mot de passe
+ * @returns Le JWT si succès, sinon null
+ */
 export async function loginForm({
   email,
   password,
 }: {
   email: string;
   password: string;
-}) {
+}): Promise<string | null> {
   const credentials = btoa(`${email}:${password}`);
 
   try {

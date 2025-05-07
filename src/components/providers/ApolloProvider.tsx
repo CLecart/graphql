@@ -32,6 +32,11 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+/**
+ * Fournit le client Apollo à l'ensemble de l'application.
+ * À utiliser en haut de l'arbre React pour activer Apollo Client.
+ * @param children - Composants enfants React
+ */
 export function ApolloProviderWrapper({
   children,
 }: {
