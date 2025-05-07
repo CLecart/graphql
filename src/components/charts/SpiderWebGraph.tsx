@@ -171,6 +171,8 @@ export function SpiderWebChart({
         width={width}
         height={height}
         viewBox={`0 0 ${width} ${height}`}
+        aria-label="Skills radar chart"
+        role="img"
       />
       <p className="text-sm text-muted-foreground mt-2">
         Skill levels (showing highest achieved values)

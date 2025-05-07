@@ -115,6 +115,8 @@ export function XPChart({ data }: XPChartProps) {
         width="100%"
         height={dimensions.height}
         viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+        aria-label="XP earned per project chart"
+        role="img"
         className="overflow-visible"
       >
         <line

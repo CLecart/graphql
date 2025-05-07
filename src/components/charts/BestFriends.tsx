@@ -77,10 +77,28 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
             Top 5 Best Friends
           </h2>
           {bestFriends.length > 0 ? (
-            <ul className="space-y-3">
+            <ul
+              className="space-y-3"
+              role="list"
+              aria-label="Top 5 best friends"
+            >
               {bestFriends.map((friend, index) => (
-                <li key={friend.login} className="flex items-center">
-                  <span className="bg-blue-100 dark:bg-blue-800/50 text-blue-800 dark:text-blue-300 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                <li
+                  key={friend.login}
+                  className="flex items-center"
+                  role="listitem"
+                  aria-label={`Best friend ${friend.login}, ${friend.count} groups together`}
+                >
+                  <span
+                    className="bg-blue-100 dark:bg-blue-800/50 text-blue-800 dark:text-blue-300 font-bold rounded-full flex items-center justify-center mr-3 text-base shrink-0"
+                    style={{
+                      width: "1.75rem",
+                      height: "1.75rem",
+                      minWidth: "1.75rem",
+                      minHeight: "1.75rem",
+                      aspectRatio: "1 / 1",
+                    }}
+                  >
                     {index + 1}
                   </span>
                   <span className="text-gray-700 dark:text-gray-200">
@@ -104,10 +122,30 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
             Latest New Connections
           </h2>
           {newConnections.length > 0 ? (
-            <ul className="space-y-3">
+            <ul
+              className="space-y-3"
+              role="list"
+              aria-label="Latest new connections"
+            >
               {newConnections.map((person, index) => (
-                <li key={person.login} className="flex items-center">
-                  <span className="bg-green-100 dark:bg-green-800/50 text-green-800 dark:text-green-300 font-bold rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                <li
+                  key={person.login}
+                  className="flex items-center"
+                  role="listitem"
+                  aria-label={`New connection ${person.login}, since ${new Date(
+                    person.firstMet
+                  ).toLocaleDateString()}`}
+                >
+                  <span
+                    className="bg-green-100 dark:bg-green-800/50 text-green-800 dark:text-green-300 font-bold rounded-full flex items-center justify-center mr-3 text-base shrink-0"
+                    style={{
+                      width: "1.75rem",
+                      height: "1.75rem",
+                      minWidth: "1.75rem",
+                      minHeight: "1.75rem",
+                      aspectRatio: "1 / 1",
+                    }}
+                  >
                     {index + 1}
                   </span>
                   <span className="text-gray-700 dark:text-gray-200">

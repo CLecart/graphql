@@ -49,11 +49,13 @@ const AuditList: React.FC<AuditListProps> = ({ data }) => {
 
   return (
     <div className="max-w-8xl mx-auto p-4">
-      <div className="space-y-4">
+      <div className="space-y-4" role="list" aria-label="Audit list">
         {audits.map((audit, index) => (
           <div
             key={index}
             className="bg-card rounded-lg shadow p-4 border border-border"
+            role="listitem"
+            aria-label={`Audit for project ${audit.group.object.name}`}
           >
             <div className="flex justify-between items-start mb-2">
               <div>

@@ -138,6 +138,7 @@ export default function LoginForm() {
                   className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
                   onChange={handleChange}
                   disabled={isLoading}
+                  aria-label="Email or Username"
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-destructive">
@@ -163,6 +164,7 @@ export default function LoginForm() {
                   className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
                   onChange={handleChange}
                   disabled={isLoading}
+                  aria-label="Password"
                 />
                 {errors.password && (
                   <p className="mt-1 text-sm text-destructive">

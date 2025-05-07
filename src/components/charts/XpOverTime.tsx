@@ -301,6 +301,8 @@ export function XpTimelineChart({
         height={height}
         viewBox={`0 0 ${width} ${height}`}
         className="mx-auto"
+        aria-label="XP progress timeline chart"
+        role="img"
       />
     </div>
   );

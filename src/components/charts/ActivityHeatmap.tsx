@@ -136,6 +136,7 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
         </div>
 
         <div className="flex-1 my-2">
+          <svg aria-label="User activity heatmap" role="img" />
           <div className="flex mb-1 h-4">
             {monthLabels.map((label, index) => (
               <div
