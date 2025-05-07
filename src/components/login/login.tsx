@@ -86,7 +86,15 @@ export default function LoginForm() {
           }}
         >
           <div className="max-w-md">
-            <div className="text-4xl font-bold mb-4 text-primary">
+            <div
+              className="text-4xl font-bold mb-4 text-primary"
+              style={{
+                textShadow:
+                  theme === "dark"
+                    ? "0 0 3px var(--color-background), 0 0 5px var(--color-background)"
+                    : "0 0 3px var(--color-foreground), 0 0 5px var(--color-foreground)",
+              }}
+            >
               Zone01 GraphQL Profile
             </div>
             <p className="text-lg text-muted-foreground">
@@ -125,7 +133,7 @@ export default function LoginForm() {
                   type="text"
                   name="email"
                   placeholder="Enter your email or username"
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
                   onChange={handleChange}
                   disabled={isLoading}
                 />
@@ -150,7 +158,7 @@ export default function LoginForm() {
                   type="password"
                   name="password"
                   placeholder="Enter your password"
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
                   onChange={handleChange}
                   disabled={isLoading}
                 />
@@ -196,12 +204,7 @@ export default function LoginForm() {
               </Button>
             </form>
 
-            <div
-              className="fon,t-bold text-center text-sm mt-4 z-0 text-black dark:text-white"
-              style={{
-                WebkitTextStroke: "0.2px white",
-              }}
-            >
+            <div className="text-center text-sm mt-4 z-0 text-foreground dark:text-background">
               Powered by GraphQL & Next.js
             </div>
           </div>
