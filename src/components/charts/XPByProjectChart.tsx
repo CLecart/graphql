@@ -7,9 +7,22 @@ type ProjectXP = {
   name: string;
 };
 
+// Constantes globales pour la chart
+const CHART_COLOR_1 = "var(--color-chart-1)";
+const CHART_HEIGHT = 400;
+const CHART_MARGIN = { top: 30, right: 30, bottom: 70, left: 80 };
+const BAR_MAX_WIDTH = 40;
+
+function formatNumber(n: number) {
+  return n.toLocaleString();
+}
+
 export function XPByProjectChart({ data }: { data: any[] }) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
+  const [dimensions, setDimensions] = useState({
+    width: 800,
+    height: CHART_HEIGHT,
+  });
   const [projectsXP, setProjectsXP] = useState<ProjectXP[]>([]);
 
   useEffect(() => {
@@ -45,7 +58,7 @@ export function XPByProjectChart({ data }: { data: any[] }) {
     const updateDimensions = () => {
       if (svgRef.current) {
         const { width } = svgRef.current.getBoundingClientRect();
-        setDimensions({ width, height: 400 });
+        setDimensions({ width, height: CHART_HEIGHT });
       }
     };
 
@@ -56,12 +69,12 @@ export function XPByProjectChart({ data }: { data: any[] }) {
 
   if (projectsXP.length === 0) return <div>No project XP data available</div>;
 
-  const margin = { top: 30, right: 30, bottom: 70, left: 80 };
+  const margin = CHART_MARGIN;
   const width = dimensions.width - margin.left - margin.right;
   const height = dimensions.height - margin.top - margin.bottom;
 
   const maxXP = Math.max(...projectsXP.map((p) => p.amount));
-  const barWidth = Math.min(40, width / projectsXP.length - 10);
+  const barWidth = Math.min(BAR_MAX_WIDTH, width / projectsXP.length - 10);
 
   return (
     <div className="w-full">
@@ -116,7 +129,7 @@ export function XPByProjectChart({ data }: { data: any[] }) {
                 y={height + margin.top - currentHeight}
                 width={barWidth}
                 height={currentHeight}
-                fill={`hsl(${210 + i * 15}, 80%, 60%)`}
+                fill={CHART_COLOR_1}
                 rx={4}
                 opacity={0.8}
                 className="transition-all duration-500"
@@ -130,7 +143,7 @@ export function XPByProjectChart({ data }: { data: any[] }) {
                 fill="currentColor"
                 fontWeight="bold"
               >
-                {project.amount}
+                {formatNumber(project.amount)}
               </text>
 
               <text
@@ -169,7 +182,7 @@ export function XPByProjectChart({ data }: { data: any[] }) {
                 fontSize="12"
                 fill="currentColor"
               >
-                {value.toLocaleString()}
+                {formatNumber(value)}
               </text>
               <line
                 x1={margin.left}

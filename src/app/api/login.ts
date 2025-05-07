@@ -26,7 +26,6 @@ export async function loginForm({
     }
     return jwt;
   } catch (error) {
-    console.error("Login error:", error);
     return null;
   }
 }

@@ -6,13 +6,27 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/app/context/ThemeContext";
 
+const LOGO_DARK = "/logo Z01.png";
+const LOGO_LIGHT = "/logo Z01light4.png";
+const BG_IMAGE = "/vagueZ01.svg";
+const WELCOME_TITLE = "Welcome back";
+const WELCOME_SUBTITLE = "Sign in to access your Zone01 profile";
+const EMAIL_LABEL = "Email or Username";
+const EMAIL_PLACEHOLDER = "Enter your email or username";
+const PASSWORD_LABEL = "Password";
+const PASSWORD_PLACEHOLDER = "Enter your password";
+const LOGIN_SUCCESS = "Login successful";
+const LOGIN_ERROR = "Incorrect email or password";
+const GENERIC_ERROR = "An error occurred";
+const POWERED_BY = "Powered by GraphQL & Next.js";
+
 const schema = z.object({
   email: z
     .string()
     .refine(
       (val) => val === "clecart" || z.string().email().safeParse(val).success,
       {
-        message: "Email invalide (ou pseudo non autorisé)",
+        message: "Invalid email (or unauthorized username)",
       }
     ),
   password: z.string().min(6, "Must contain at least 6 characters"),
@@ -55,26 +69,24 @@ export default function LoginForm() {
       try {
         const res = await loginForm(formData);
         if (res) {
-          console.log("Login successful");
           router.push("/profile");
         } else {
-          setErrors({ email: "Email ou mot de passe incorrect" });
+          setErrors({ email: LOGIN_ERROR });
         }
       } catch (error) {
-        console.error("Login error:", error);
-        setErrors({ email: "Une erreur s'est produite" });
+        setErrors({ email: GENERIC_ERROR });
       } finally {
         setIsLoading(false);
       }
     }
   };
-  console.log(theme);
-  const logoImage = theme === "dark" ? "/logo Z01.png" : "/logo Z01light4.png";
+
+  const logoImage = theme === "dark" ? LOGO_DARK : LOGO_LIGHT;
 
   return (
     <>
       <img
-        src="/vagueZ01.svg"
+        src={BG_IMAGE}
         className="absolute top-0 left-0 w-screen h-full object-cover -z-10 opacity-60"
         alt="background shape"
       />
@@ -106,10 +118,8 @@ export default function LoginForm() {
         <div className="flex flex-col justify-center p-8">
           <div className="mx-auto w-full max-w-md space-y-8">
             <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome back</h1>
-              <p className="text-muted-foreground">
-                Sign in to access your Zone01 profile
-              </p>
+              <h1 className="text-3xl font-bold mb-2">{WELCOME_TITLE}</h1>
+              <p className="text-muted-foreground">{WELCOME_SUBTITLE}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -118,13 +128,13 @@ export default function LoginForm() {
                   htmlFor="email"
                   className="block text-sm font-medium mb-2"
                 >
-                  Email or Username
+                  {EMAIL_LABEL}
                 </label>
                 <input
                   id="email"
                   type="text"
                   name="email"
-                  placeholder="Enter your email or username"
+                  placeholder={EMAIL_PLACEHOLDER}
                   className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
                   onChange={handleChange}
                   disabled={isLoading}
@@ -142,14 +152,14 @@ export default function LoginForm() {
                     htmlFor="password"
                     className="block text-sm font-medium"
                   >
-                    Password
+                    {PASSWORD_LABEL}
                   </label>
                 </div>
                 <input
                   id="password"
                   type="password"
                   name="password"
-                  placeholder="Enter your password"
+                  placeholder={PASSWORD_PLACEHOLDER}
                   className="w-full px-4 py-3 rounded-lg border border-border bg-background/50 focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
                   onChange={handleChange}
                   disabled={isLoading}
@@ -196,8 +206,8 @@ export default function LoginForm() {
               </Button>
             </form>
 
-            <div className="text-center text-sm mt-4 z-0 text-foreground dark:text-background">
-              Powered by GraphQL & Next.js
+            <div className="text-center text-sm mt-4 z-0 text-foreground dark:text-white">
+              {POWERED_BY}
             </div>
           </div>
         </div>

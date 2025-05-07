@@ -6,6 +6,12 @@ type Skill = {
   score: number;
 };
 
+const CHART_COLOR = "var(--color-chart-1)";
+const CHART_SIZE = 300;
+const CHART_RADIUS = CHART_SIZE * 0.4;
+const CHART_CENTER = CHART_SIZE / 2;
+const LEVELS = [0.2, 0.4, 0.6, 0.8, 1];
+
 export function SkillsRadarChart({ data }: { data: any[] }) {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [scale, setScale] = useState(0);
@@ -59,9 +65,9 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
 
   if (skills.length === 0) return <div>No skills data available</div>;
 
-  const size = 300;
-  const center = size / 2;
-  const radius = size * 0.4;
+  const size = CHART_SIZE;
+  const center = CHART_CENTER;
+  const radius = CHART_RADIUS;
   const angleStep = (Math.PI * 2) / skills.length;
 
   const skillsPoints = skills
@@ -78,7 +84,7 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
     <div className="flex flex-col items-center w-full">
       <h3 className="text-lg font-medium mb-4">Skills Overview</h3>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-        {[0.2, 0.4, 0.6, 0.8, 1].map((level, i) => (
+        {LEVELS.map((level, i) => (
           <circle
             key={i}
             cx={center}
@@ -112,10 +118,10 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
 
         <polygon
           points={skillsPoints}
-          fill="var(--color-chart-1)"
+          fill={CHART_COLOR}
           opacity="0.7"
           strokeWidth="2"
-          stroke="var(--color-chart-1)"
+          stroke={CHART_COLOR}
           style={{
             transform: `scale(${scale})`,
             transformOrigin: "center",
@@ -135,7 +141,7 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
               cx={x}
               cy={y}
               r="4"
-              fill="var(--color-chart-1)"
+              fill={CHART_COLOR}
               className="animate-pulse"
             />
           );
@@ -169,7 +175,7 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
           <div key={i} className="flex items-center gap-2">
             <div
               className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: `var(--color-chart-${(i % 5) + 1})` }}
+              style={{ backgroundColor: CHART_COLOR }}
             ></div>
             <span className="text-sm">
               {skill.name}:{" "}

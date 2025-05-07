@@ -1,10 +1,3 @@
-/*
-  =========================
-  GLOBAL CSS VARIABLES
-  =========================
-  Utilise ces variables dans tes composants ou dans le tailwind.config.js
-  pour garantir la cohérence des couleurs et la facilité de maintenance.
-*/
 :root {
   --color-primary: #2563eb;
   --color-secondary: #f59e42;
@@ -16,31 +9,13 @@
   --text-stroke-login: 0.2px white;
 }
 
-/*
-  =========================
-  DARK MODE VARIABLES
-  =========================
-*/
 .dark {
   --color-background: #18181b;
   --color-foreground: #fff;
-  /* Ajoute ici d'autres overrides pour le dark mode si besoin */
 }
 
-/*
-  =========================
-  TAILWIND & BASE IMPORTS
-  =========================
-*/
 @import "tailwindcss";
 @import "tw-animate-css";
-
-/*
-  =========================
-  AUTRES VARIABLES OU UTILITAIRES
-  =========================
-  Ajoute ici d'autres variables globales si besoin.
-*/
 
 @custom-variant dark (&:is(.dark *));
 

@@ -12,7 +12,7 @@ export default function ThemeToggle() {
   return (
     <button
       aria-label={
-        theme === "dark" ? "Activer le mode clair" : "Activer le mode sombre"
+        theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
       }
       onClick={toggleTheme}
       className="rounded-md p-2 bg-background/80 border border-border shadow transition hover:bg-accent/60 focus:outline-none flex items-center justify-center w-10 h-10"

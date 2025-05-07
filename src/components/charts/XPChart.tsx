@@ -1,6 +1,19 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
+// Constantes globales pour les couleurs et dimensions
+const CHART_COLOR_1 = "var(--color-chart-1)";
+const CHART_COLOR_5 = "var(--color-chart-5)";
+const CHART_HEIGHT = 300;
+const CHART_MARGIN = { top: 20, right: 30, bottom: 30, left: 60 };
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+}
+
 type XPDataPoint = {
   date: Date;
   total: number;
@@ -8,7 +21,10 @@ type XPDataPoint = {
 
 export function XPChart({ data }: { data: any[] }) {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 800, height: 300 });
+  const [dimensions, setDimensions] = useState({
+    width: 800,
+    height: CHART_HEIGHT,
+  });
   const [cumulativeXP, setCumulativeXP] = useState<XPDataPoint[]>([]);
 
   useEffect(() => {
@@ -31,7 +47,7 @@ export function XPChart({ data }: { data: any[] }) {
     const updateDimensions = () => {
       if (svgRef.current) {
         const { width } = svgRef.current.getBoundingClientRect();
-        setDimensions({ width, height: 300 });
+        setDimensions({ width, height: CHART_HEIGHT });
       }
     };
 
@@ -42,7 +58,7 @@ export function XPChart({ data }: { data: any[] }) {
 
   if (cumulativeXP.length === 0) return <div>No XP data available</div>;
 
-  const margin = { top: 20, right: 30, bottom: 30, left: 60 };
+  const margin = CHART_MARGIN;
   const width = dimensions.width - margin.left - margin.right;
   const height = dimensions.height - margin.top - margin.bottom;
 
@@ -60,13 +76,6 @@ export function XPChart({ data }: { data: any[] }) {
       return `${x},${y}`;
     })
     .join(" ");
-
-  const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      year: "numeric",
-    });
-  };
 
   const xTicks = [0, 0.25, 0.5, 0.75, 1].map((percent) => {
     const date = new Date(
@@ -164,22 +173,14 @@ export function XPChart({ data }: { data: any[] }) {
 
         <polyline
           fill="none"
-          stroke="var(--color-chart-1)"
+          stroke={CHART_COLOR_1}
           strokeWidth="3"
           points={points}
         />
 
         <linearGradient id="xpGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop
-            offset="0%"
-            stopColor="var(--color-chart-1)"
-            stopOpacity="0.5"
-          />
-          <stop
-            offset="100%"
-            stopColor="var(--color-chart-1)"
-            stopOpacity="0.05"
-          />
+          <stop offset="0%" stopColor={CHART_COLOR_1} stopOpacity="0.5" />
+          <stop offset="100%" stopColor={CHART_COLOR_1} stopOpacity="0.05" />
         </linearGradient>
         <polygon
           fill="url(#xpGradient)"
