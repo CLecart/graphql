@@ -37,6 +37,12 @@ export function ProjectsChart({ data }: ProjectsChartProps) {
     setProjectStats(stats);
   }, [data]);
 
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-muted-foreground p-4">No project data available</div>
+    );
+  }
+
   const width = 300;
   const height = 300;
   const radius = Math.min(width, height) / 2;
@@ -75,7 +81,13 @@ export function ProjectsChart({ data }: ProjectsChartProps) {
 
   return (
     <div className="flex flex-col items-center">
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
+      <svg
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
+        aria-label="Project success rate chart"
+        role="img"
+      >
         <circle
           cx={centerX}
           cy={centerY}

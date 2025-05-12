@@ -84,7 +84,12 @@ export function XPByProjectChart({ data }: XPByProjectChartProps) {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  if (projectsXP.length === 0) return <div>No project XP data available</div>;
+  if (!projectsXP.length)
+    return (
+      <div className="text-muted-foreground p-4">
+        No project XP data available
+      </div>
+    );
 
   const margin = CHART_MARGIN;
   const width = dimensions.width - margin.left - margin.right;

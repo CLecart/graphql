@@ -67,6 +67,12 @@ export function SkillsRadarChart({ data }: { data: any[] }) {
     return () => clearTimeout(timer);
   }, []);
 
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-muted-foreground p-4">No skills data available</div>
+    );
+  }
+
   if (skills.length === 0) return <div>No skills data available</div>;
 
   const size = CHART_SIZE;

@@ -71,6 +71,12 @@ export function XPChart({ data }: XPChartProps) {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-muted-foreground p-4">No XP data available</div>
+    );
+  }
+
   if (cumulativeXP.length === 0) return <div>No XP data available</div>;
 
   const margin = CHART_MARGIN;
