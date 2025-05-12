@@ -1,53 +1,41 @@
 # Zone01 Profile Dashboard
 
-Ce projet est un tableau de bord Next.js/React pour visualiser les statistiques, l’activité et les audits d’un étudiant Zone01 via l’API GraphQL officielle.
+A Next.js + GraphQL dashboard for Zone01 students. Visualize your XP, audits, skills, and activity in a modern UI.
 
-## Installation
+## Features
 
-1. **Cloner le dépôt**
-   ```bash
-   git clone <repo-url>
-   cd graphql
-   ```
-2. **Installer les dépendances**
-   ```bash
-   npm install
-   ```
-3. **Configurer les variables d’environnement**
+- Secure login (JWT)
+- XP and project stats
+- Activity heatmap (Gitea/Zone01 activity style)
+- Audit history and stats
+- Skills radar/spiderweb chart
+- Best friends/collaborators
+- Responsive, dark mode, accessible
 
-   - Créez un fichier `.env.local` à la racine si besoin (exemple : pour surcharger l’URL GraphQL ou d’autres secrets).
-   - Par défaut, l’URL de l’API Zone01 est codée dans le code source.
+## Data sources
 
-4. **Lancer le projet**
-   ```bash
-   npm run dev
-   ```
+- All activity and stats are based on your Zone01 (Gitea) platform events (projects, audits, XP, corrections, etc.).
+- No GitHub data is used. The heatmap and stats reflect your Zone01/Gitea activity only.
 
-## Utilisation
+## Getting Started
 
-- Rendez-vous sur `/login` pour vous connecter avec votre email ou votre pseudo Zone01 (ex : "clecart") et votre mot de passe.
-- Après connexion, accédez à votre profil, vos XP, vos audits, vos projets et vos statistiques de collaboration.
+1. Clone the repo
+2. Install dependencies: `npm install`
+3. Run dev server: `npm run dev`
+4. Open [http://localhost:3000](http://localhost:3000)
 
-## Bonnes pratiques appliquées
+## Configuration
 
-- **Pas de code en dur** : Les identifiants utilisateurs ne sont pas codés en dur, tout est dynamique.
-- **Séparation des responsabilités** : Les requêtes GraphQL, la logique Apollo, et les composants UI sont bien séparés.
-- **Validation** : Le formulaire de login accepte un email ou un pseudo autorisé.
-- **Variables d’environnement** : Prise en charge possible via `.env.local`.
-- **Aucune dépendance obsolète** : Les dépendances sont à jour (voir package.json).
-- **Aucun doublon de code** : Les composants sont factorisés et réutilisables.
+- Requires a Zone01 account
+- API endpoint: `https://zone01normandie.org/api/graphql-engine/v1/graphql`
 
-## Structure du projet
+## Tech Stack
 
-- `src/app/` : Pages Next.js (login, profil, etc.)
-- `src/components/` : Composants UI et graphiques
-- `src/lib/` : Utilitaires et requêtes GraphQL
-- `.vscode/settings.json` : Ignore les warnings sur les at-rules CSS personnalisées
+- Next.js
+- Apollo Client (GraphQL)
+- Tailwind CSS
+- TypeScript
 
-## Contribution
+---
 
-- Forkez le repo, créez une branche, proposez vos améliorations via pull request.
-
-## Licence
-
-MIT
+Feel free to contribute or open issues!

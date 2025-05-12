@@ -68,6 +68,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
+  const [error, setError] = useState<string | null>(null);
 
   const { data: userData, loading: userLoading } = useQuery(GET_USER_INFO);
   const { data: xpData, loading: xpLoading } = useQuery(GET_USER_XP);
@@ -93,6 +94,36 @@ export default function ProfilePage() {
       router.push("/login");
     }
   }, [router]);
+
+  useEffect(() => {
+    if (
+      userData?.error ||
+      xpData?.error ||
+      progressData?.error ||
+      resultsData?.error ||
+      detailedXpData?.error ||
+      skillsData?.error ||
+      bestFriendData?.error ||
+      activityData?.error ||
+      auditData?.error ||
+      projectData?.error
+    ) {
+      setError(
+        "An error occurred while loading your data. Please try again later."
+      );
+    }
+  }, [
+    userData,
+    xpData,
+    progressData,
+    resultsData,
+    detailedXpData,
+    skillsData,
+    bestFriendData,
+    activityData,
+    auditData,
+    projectData,
+  ]);
 
   const handleLogout = () => {
     localStorage.removeItem("jwt_token");
@@ -126,6 +157,21 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-muted">
         <Loader label="Loading your profile..." size={64} />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-background to-muted">
+        <div className="text-red-500 text-lg font-semibold mb-4">{error}</div>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-primary text-white rounded-md"
+          aria-label="Reload page"
+        >
+          Reload
+        </button>
       </div>
     );
   }
@@ -200,6 +246,7 @@ export default function ProfilePage() {
               }`}
               onClick={() => setActiveTab("overview")}
               aria-label="Show overview tab"
+              tabIndex={0}
             >
               Overview
             </button>
@@ -211,6 +258,7 @@ export default function ProfilePage() {
               }`}
               onClick={() => setActiveTab("projects")}
               aria-label="Show XP gains tab"
+              tabIndex={0}
             >
               Xp gains
             </button>
@@ -222,6 +270,7 @@ export default function ProfilePage() {
               }`}
               onClick={() => setActiveTab("skills")}
               aria-label="Show audits tab"
+              tabIndex={0}
             >
               Audits
             </button>
@@ -410,7 +459,14 @@ export default function ProfilePage() {
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">All Xp gains</h2>
               </div>
-              <RecentXPGains transactions={detailedXpData.transaction} />
+              {detailedXpData?.transaction &&
+              detailedXpData.transaction.length > 0 ? (
+                <RecentXPGains transactions={detailedXpData.transaction} />
+              ) : (
+                <div className="p-6 text-muted-foreground">
+                  No data available
+                </div>
+              )}
             </div>
           </>
         )}
@@ -421,7 +477,14 @@ export default function ProfilePage() {
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Audit History</h2>
               </div>
-              <AuditList data={auditData} />
+              {auditData?.user?.[0]?.audits_as_auditor &&
+              auditData.user[0].audits_as_auditor.length > 0 ? (
+                <AuditList data={auditData} />
+              ) : (
+                <div className="p-6 text-muted-foreground">
+                  No data available
+                </div>
+              )}
             </div>
           </>
         )}
