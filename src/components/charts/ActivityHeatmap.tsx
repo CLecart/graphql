@@ -108,7 +108,9 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
 
   return (
     <div className="p-5 mx-12">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-2">
+        {" "}
+        {/* réduit mb-4 à mb-2 */}
         <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
           <span>Less</span>
           <div className="flex space-x-1">
@@ -123,21 +125,21 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
       </div>
 
       <div className="flex">
-        <div className="flex flex-col mr-4 mt-7">
-          {["", "Mon", "", "Wed", "", "Fri", ""].map((day, index) => (
+        {/* Labels jours de la semaine à gauche */}
+        <div className="flex flex-col justify-between mr-2 mt-[18px]">
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, i) => (
             <div
-              key={index}
-              className="h-3 text-xs text-gray-500 dark:text-gray-400 mb-1"
-              style={{ height: "15px" }}
+              key={day}
+              className="h-4 text-xs text-gray-500 dark:text-gray-400 mb-[3px] flex items-center"
+              style={{ height: "16px", minWidth: "28px" }}
             >
               {day}
             </div>
           ))}
         </div>
-
-        <div className="flex-1 my-2">
-          <svg aria-label="User activity heatmap" role="img" />
-          <div className="flex mb-1 h-4">
+        <div className="flex-1 mt-0">
+          {/* Labels des mois */}
+          <div className="flex mb-1 h-4 ml-[2px]">
             {monthLabels.map((label, index) => (
               <div
                 key={index}
@@ -155,7 +157,7 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
               </div>
             ))}
           </div>
-
+          {/* Grille */}
           <div className="flex">
             {weeks.map((week, weekIndex) => (
               <div key={weekIndex} className="flex flex-col mr-1">
