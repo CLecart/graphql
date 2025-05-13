@@ -443,7 +443,7 @@ export default function ProfilePage() {
               <div className="bg-primary/10 p-6">
                 <h2 className="text-xl font-semibold mb-2">Activity Heatmap</h2>
               </div>
-              <div className="p-4">
+              <div className="p-4 w-full overflow-x-auto">
                 <ActivityHeatmap data={activityGraphData} />
               </div>
             </div>
