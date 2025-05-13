@@ -202,7 +202,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/40 color-[var(--foreground)]">
       <header className="sticky top-0 z-10 backdrop-blur-md bg-background/80 px-8 py-4 border-b border-border/40 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <div className="h-10 w-10 rounded-full flex items-center justify-center text-primary-foreground font-bold mr-3 bg-black dark:bg-white">
+          <div className="h-10 w-10 aspect-square rounded-full flex items-center justify-center text-primary-foreground font-bold mr-3 bg-black dark:bg-white">
             <img src="/favicon.ico" alt="Logo" className="h-6 w-6" />
           </div>
           <h1 className="text-2xl font-bold">Zone01 Profile</h1>
@@ -280,16 +280,18 @@ export default function ProfilePage() {
         {activeTab === "overview" && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-              <div className="col-span-1 bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
-                <div className="bg-primary/10 p-6">
+              {/* User Information */}
+              <div className="col-span-1 bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 w-full flex flex-col">
+                <div className="bg-primary/10 p-5">
                   <h2 className="text-xl font-semibold mb-2">
                     User Information
                   </h2>
                 </div>
                 {userData?.user && userData.user[0] && (
                   <div className="p-6">
+                    {/* ...infos user... */}
                     <div className="mb-6 flex justify-center">
-                      <div className="h-24 w-24 rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center text-2xl font-bold text-primary">
+                      <div className="h-24 w-24 aspect-square rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center text-2xl font-bold text-primary">
                         <img
                           src="/favicon.ico"
                           alt="Logo"
@@ -323,12 +325,13 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
-
-              <div className="col-span-2 bg-card rounded-xl shadow-lg overflow-hidden border border-border/50">
+              {/* Experience Overview */}
+              <div className="col-span-1 md:col-span-2 bg-card rounded-xl shadow-lg overflow-hidden border border-border/50 w-full flex flex-col">
                 <div className="bg-primary/10 p-6 text-center">
                   <h2 className="text-xl font-semibold">Experience Overview</h2>
                 </div>
                 <div className="p-6">
+                  {/* ...contenu Experience Overview... */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
@@ -338,14 +341,12 @@ export default function ProfilePage() {
                         {(totalXP / 1000000).toFixed(2)}M
                       </p>
                     </div>
-
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Projects
                       </h3>
                       <p className="text-3xl font-bold">{projectCount}</p>
                     </div>
-
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Total Audits
@@ -355,7 +356,6 @@ export default function ProfilePage() {
                       </p>
                     </div>
                   </div>
-
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
@@ -367,7 +367,6 @@ export default function ProfilePage() {
                         ).length || 0}
                       </p>
                     </div>
-
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Audits not completed
@@ -378,7 +377,6 @@ export default function ProfilePage() {
                         ).length || 0}
                       </p>
                     </div>
-
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex items-center justify-center">
                       <div className="text-center">
                         <div className="flex justify-center">
@@ -398,7 +396,6 @@ export default function ProfilePage() {
                       </div>
                     </div>
                   </div>
-
                   {xpData?.transaction && (
                     <div className="h-64 mt-6">
                       <XPChart data={xpData.transaction} />
