@@ -47,7 +47,7 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
       <div className="mb-8 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-lg font-semibold text-purple-800 dark:text-purple-300">
-            People you've worked with
+            People you&apos;ve worked with
           </h2>
           <span className="text-purple-600 dark:text-purple-400 font-bold">
             {totalUniqueConnections}
@@ -66,7 +66,10 @@ const BestFriendsComponent: React.FC<Props> = ({ data, currentUserLogin }) => {
               {milestone} people!
             </>
           ) : (
-            <>You've reached a milestone of {totalUniqueConnections} people!</>
+            <>
+              You&apos;ve reached a milestone of {totalUniqueConnections}{" "}
+              people!
+            </>
           )}
         </p>
       </div>

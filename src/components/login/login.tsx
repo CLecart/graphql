@@ -15,7 +15,6 @@ const EMAIL_LABEL = "Email or Username";
 const EMAIL_PLACEHOLDER = "Enter your email or username";
 const PASSWORD_LABEL = "Password";
 const PASSWORD_PLACEHOLDER = "Enter your password";
-const LOGIN_SUCCESS = "Login successful";
 const LOGIN_ERROR = "Incorrect email or password";
 const GENERIC_ERROR = "An error occurred";
 const POWERED_BY = "Powered by GraphQL & Next.js";
@@ -73,7 +72,7 @@ export default function LoginForm() {
         } else {
           setErrors({ email: LOGIN_ERROR });
         }
-      } catch (error) {
+      } catch {
         setErrors({ email: GENERIC_ERROR });
       } finally {
         setIsLoading(false);

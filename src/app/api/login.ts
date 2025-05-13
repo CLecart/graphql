@@ -31,7 +31,7 @@ export async function loginForm({
       localStorage.setItem("jwt_token", jwt);
     }
     return jwt;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

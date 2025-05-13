@@ -61,7 +61,6 @@ export function XpTimelineChart({
     const maxDate = new Date(
       Math.max(...sampledData.map((d) => d.date.getTime()))
     );
-    const minXp = 0;
     const maxXp = Math.max(...sampledData.map((d) => d.xp));
 
     const xScale = (date: Date) => {
