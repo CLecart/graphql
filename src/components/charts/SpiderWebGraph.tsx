@@ -171,11 +171,9 @@ export function SpiderWebChart({
   }, [data, width, height, levels, maxSkills]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col min-w-min items-center">
       <svg
         ref={svgRef}
-        width={width}
-        height={height}
         viewBox={`0 0 ${width} ${height}`}
         aria-label="Skills radar chart"
         role="img"

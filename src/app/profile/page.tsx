@@ -419,7 +419,7 @@ export default function ProfilePage() {
                 </div>
                 {skillsData?.user?.[0]?.transactions && (
                   <div className="overflow-x-auto ">
-                    <div className="mx-auto min-w-full min-h-full py-2 ml-20">
+                    <div className="mx-auto min-w-full min-h-full py-2">
                       <SpiderWebChart data={skillsData.user[0].transactions} />
                     </div>
                   </div>
