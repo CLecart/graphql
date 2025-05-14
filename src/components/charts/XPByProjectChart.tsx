@@ -98,6 +98,25 @@ export function XPByProjectChart({ data }: XPByProjectChartProps) {
   const maxXP = Math.max(...projectsXP.map((p) => p.amount));
   const barWidth = Math.min(BAR_MAX_WIDTH, width / projectsXP.length - 10);
 
+  // Déplacer les hooks React en dehors des callbacks pour respecter les règles de React
+  const [currentHeights, setCurrentHeights] = useState<number[]>(
+    projectsXP.map(() => 0)
+  );
+
+  useEffect(() => {
+    const timers = projectsXP.map((project, i) =>
+      setTimeout(() => {
+        setCurrentHeights((prev) => {
+          const newHeights = [...prev];
+          newHeights[i] = (project.amount / maxXP) * height;
+          return newHeights;
+        });
+      }, 100 + i * 50)
+    );
+
+    return () => timers.forEach((timer) => clearTimeout(timer));
+  }, [projectsXP, maxXP, height]);
+
   return (
     <div className="w-full">
       <h3 className="text-lg font-medium mb-4">Top Projects by XP</h3>
@@ -131,26 +150,16 @@ export function XPByProjectChart({ data }: XPByProjectChartProps) {
             margin.left +
             (width / projectsXP.length) * i +
             (width / projectsXP.length - barWidth) / 2;
-          const barHeight = (project.amount / maxXP) * height;
+          const barHeight = currentHeights[i];
           const y = height + margin.top - barHeight;
-
-          const [currentHeight, setCurrentHeight] = useState(0);
-
-          useEffect(() => {
-            const timer = setTimeout(() => {
-              setCurrentHeight(barHeight);
-            }, 100 + i * 50);
-
-            return () => clearTimeout(timer);
-          }, [barHeight]);
 
           return (
             <g key={i}>
               <rect
                 x={x}
-                y={height + margin.top - currentHeight}
+                y={y}
                 width={barWidth}
-                height={currentHeight}
+                height={barHeight}
                 fill={CHART_COLOR_1}
                 rx={4}
                 opacity={0.8}
@@ -159,7 +168,7 @@ export function XPByProjectChart({ data }: XPByProjectChartProps) {
 
               <text
                 x={x + barWidth / 2}
-                y={height + margin.top - currentHeight - 5}
+                y={y - 5}
                 textAnchor="middle"
                 fontSize="12"
                 fill="currentColor"
