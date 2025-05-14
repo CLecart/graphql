@@ -11,9 +11,13 @@ export const GET_USER_INFO = gql`
 `;
 
 export const GET_USER_XP = gql`
-  query GetXpStatsWithDetails {
+  query GetXpStatsWithDetails($userId: ID!) {
     piscineGoXpAggregate: transaction_aggregate(
-      where: { type: { _eq: "xp" }, path: { _like: "%piscine-go%" } }
+      where: {
+        type: { _eq: "xp" }
+        path: { _like: "%piscine-go%" }
+        userId: { _eq: $userId }
+      }
     ) {
       aggregate {
         sum {
@@ -23,7 +27,11 @@ export const GET_USER_XP = gql`
     }
 
     piscineGoXpDetails: transaction(
-      where: { type: { _eq: "xp" }, path: { _like: "%piscine-go%" } }
+      where: {
+        type: { _eq: "xp" }
+        path: { _like: "%piscine-go%" }
+        userId: { _eq: $userId }
+      }
       order_by: { createdAt: asc }
     ) {
       amount
@@ -32,7 +40,11 @@ export const GET_USER_XP = gql`
     }
 
     piscineJsXpAggregate: transaction_aggregate(
-      where: { type: { _eq: "xp" }, path: { _like: "%piscine-js/%" } }
+      where: {
+        type: { _eq: "xp" }
+        path: { _like: "%piscine-js/%" }
+        userId: { _eq: $userId }
+      }
     ) {
       aggregate {
         sum {
@@ -42,7 +54,11 @@ export const GET_USER_XP = gql`
     }
 
     piscineJsXpDetails: transaction(
-      where: { type: { _eq: "xp" }, path: { _like: "%piscine-js/%" } }
+      where: {
+        type: { _eq: "xp" }
+        path: { _like: "%piscine-js/%" }
+        userId: { _eq: $userId }
+      }
       order_by: { createdAt: asc }
     ) {
       amount
@@ -53,6 +69,7 @@ export const GET_USER_XP = gql`
     cursusXpAggregate: transaction_aggregate(
       where: {
         type: { _eq: "xp" }
+        userId: { _eq: $userId }
         _or: [
           {
             path: { _like: "%div-01%" }
@@ -75,6 +92,7 @@ export const GET_USER_XP = gql`
     cursusXpDetails: transaction(
       where: {
         type: { _eq: "xp" }
+        userId: { _eq: $userId }
         _or: [
           {
             path: { _like: "%div-01%" }
