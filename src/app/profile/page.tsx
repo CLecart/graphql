@@ -238,17 +238,25 @@ export default function ProfilePage() {
                 </div>
                 {userData?.user && userData.user[0] && (
                   <div className="p-6">
-                    {/* ...infos user... */}
                     <div className="mb-6 flex justify-center">
-                      <div className="h-24 w-24 aspect-square rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center text-2xl font-bold text-primary">
-                        <Image
-                          src="/favicon.ico"
-                          alt="Logo"
-                          className="h-12 w-12"
-                          width={48}
-                          height={48}
-                        />
-                      </div>
+                      {userData.user[0].id === 3494 ? (
+                        // Display the logo for user ID 3494
+                        <div className="h-24 w-24 aspect-square rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center">
+                          <Image
+                            src="/favicon.ico"
+                            alt="Logo"
+                            className="h-12 w-12"
+                            width={48}
+                            height={48}
+                          />
+                        </div>
+                      ) : (
+                        // Display initials for other users
+                        <div className="h-24 w-24 aspect-square rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center text-2xl font-bold text-primary">
+                          {userData.user[0].firstName[0].toUpperCase()}
+                          {userData.user[0].lastName[0].toUpperCase()}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-3">
                       <div className="flex justify-between items-center pb-2 border-b border-border/30">
