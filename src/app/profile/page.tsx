@@ -60,10 +60,6 @@ interface User {
   transactions?: Transaction[];
 }
 
-interface QueryData {
-  user?: User[];
-}
-
 export default function ProfilePage() {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
@@ -74,8 +70,6 @@ export default function ProfilePage() {
   const { data: xpData, loading: xpLoading } = useQuery(GET_USER_XP);
   const { data: progressData, loading: progressLoading } =
     useQuery(GET_USER_PROGRESS);
-  const { data: resultsData, loading: resultsLoading } =
-    useQuery(GET_USER_RESULTS);
   const { data: detailedXpData, loading: detailedXpLoading } =
     useQuery(GET_USER_DETAILED_XP);
   const { data: skillsData, loading: skillsLoading } =
@@ -85,7 +79,6 @@ export default function ProfilePage() {
   const { data: activityData, loading: activityLoading } =
     useQuery(GET_ACTIVITY);
   const { data: auditData, loading: auditLoading } = useQuery(GET_AUDITS);
-  const { data: projectData, loading: projectLoading } = useQuery(GET_PROJECTS);
 
   useEffect(() => {
     setIsClient(true);
@@ -100,13 +93,11 @@ export default function ProfilePage() {
       userData?.error ||
       xpData?.error ||
       progressData?.error ||
-      resultsData?.error ||
       detailedXpData?.error ||
       skillsData?.error ||
       bestFriendData?.error ||
       activityData?.error ||
-      auditData?.error ||
-      projectData?.error
+      auditData?.error
     ) {
       setError(
         "An error occurred while loading your data. Please try again later."
@@ -116,13 +107,11 @@ export default function ProfilePage() {
     userData,
     xpData,
     progressData,
-    resultsData,
     detailedXpData,
     skillsData,
     bestFriendData,
     activityData,
     auditData,
-    projectData,
   ]);
 
   const handleLogout = () => {
@@ -131,22 +120,13 @@ export default function ProfilePage() {
   };
 
   const totalXP = xpData?.cursusXpAggregate?.aggregate?.sum?.amount || 0;
-  const completedProjects =
-    progressData?.progress?.filter((p: { grade: number }) => p.grade > 0)
-      .length || 0;
 
   const activityGraphData = activityData?.user?.[0]?.progresses || [];
-
-  const projectCount =
-    projectData?.user?.[0]?.transactions?.filter(
-      (transaction: Transaction) => transaction.object?.type === "project"
-    ).length || 0;
 
   const isLoading =
     userLoading ||
     xpLoading ||
     progressLoading ||
-    resultsLoading ||
     detailedXpLoading ||
     skillsLoading ||
     bestFriendLoading ||
@@ -345,7 +325,11 @@ export default function ProfilePage() {
                       <h3 className="text-sm text-muted-foreground mb-1">
                         Projects
                       </h3>
-                      <p className="text-3xl font-bold">{projectCount}</p>
+                      <p className="text-3xl font-bold">
+                        {progressData?.progress?.filter(
+                          (p: { grade: number }) => p.grade > 0
+                        ).length || 0}
+                      </p>
                     </div>
                     <div className="bg-background/50 rounded-lg p-4 border border-border/30 flex flex-col items-center justify-center">
                       <h3 className="text-sm text-muted-foreground mb-1">

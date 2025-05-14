@@ -26,7 +26,7 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
         const date = new Date(activity.createdAt);
         const dateStr = date.toISOString().split("T")[0];
         activityMap[dateStr] = (activityMap[dateStr] || 0) + 1;
-      } catch (e) {
+      } catch {
         console.warn("Invalid date format", activity.createdAt);
       }
     });
