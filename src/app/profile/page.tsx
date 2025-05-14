@@ -236,11 +236,10 @@ export default function ProfilePage() {
                     User Information
                   </h2>
                 </div>
-                {userData?.user && userData.user[0] && (
+                {userData?.user && userData.user.length > 0 ? (
                   <div className="p-6">
                     <div className="mb-6 flex justify-center">
                       {userData.user[0].id === 3494 ? (
-                        // Display the logo for user ID 3494
                         <div className="h-24 w-24 aspect-square rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center">
                           <Image
                             src="/favicon.ico"
@@ -251,7 +250,6 @@ export default function ProfilePage() {
                           />
                         </div>
                       ) : (
-                        // Display initials for other users
                         <div className="h-24 w-24 aspect-square rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center text-2xl font-bold text-primary">
                           {userData.user[0].firstName[0].toUpperCase()}
                           {userData.user[0].lastName[0].toUpperCase()}
@@ -281,6 +279,10 @@ export default function ProfilePage() {
                         </div>
                       )}
                     </div>
+                  </div>
+                ) : (
+                  <div className="p-6 text-muted-foreground">
+                    No user data available
                   </div>
                 )}
               </div>
