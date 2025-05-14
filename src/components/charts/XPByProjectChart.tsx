@@ -42,6 +42,11 @@ export function XPByProjectChart({ data }: XPByProjectChartProps) {
   });
   const [projectsXP, setProjectsXP] = useState<ProjectXP[]>([]);
 
+  // Déplacer les hooks React en dehors des conditions pour respecter les règles de React
+  const [currentHeights, setCurrentHeights] = useState<number[]>(
+    projectsXP.map(() => 0)
+  );
+
   useEffect(() => {
     if (!data || data.length === 0) return;
 
@@ -84,24 +89,8 @@ export function XPByProjectChart({ data }: XPByProjectChartProps) {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
 
-  if (!projectsXP.length)
-    return (
-      <div className="text-muted-foreground p-4">
-        No project XP data available
-      </div>
-    );
-
-  const margin = CHART_MARGIN;
-  const width = dimensions.width - margin.left - margin.right;
-  const height = dimensions.height - margin.top - margin.bottom;
-
   const maxXP = Math.max(...projectsXP.map((p) => p.amount));
-  const barWidth = Math.min(BAR_MAX_WIDTH, width / projectsXP.length - 10);
-
-  // Déplacer les hooks React en dehors des callbacks pour respecter les règles de React
-  const [currentHeights, setCurrentHeights] = useState<number[]>(
-    projectsXP.map(() => 0)
-  );
+  const height = dimensions.height - CHART_MARGIN.top - CHART_MARGIN.bottom;
 
   useEffect(() => {
     const timers = projectsXP.map((project, i) =>
@@ -116,6 +105,18 @@ export function XPByProjectChart({ data }: XPByProjectChartProps) {
 
     return () => timers.forEach((timer) => clearTimeout(timer));
   }, [projectsXP, maxXP, height]);
+
+  if (!projectsXP.length)
+    return (
+      <div className="text-muted-foreground p-4">
+        No project XP data available
+      </div>
+    );
+
+  const margin = CHART_MARGIN;
+  const width = dimensions.width - margin.left - margin.right;
+
+  const barWidth = Math.min(BAR_MAX_WIDTH, width / projectsXP.length - 10);
 
   return (
     <div className="w-full">

@@ -11,7 +11,6 @@ export function handleApiError(
 ) {
   if (typeof window !== "undefined") {
     // Log uniquement côté client pour debug
-    // eslint-disable-next-line no-console
     if (process.env.NODE_ENV !== "production") {
       console.error(error);
     }

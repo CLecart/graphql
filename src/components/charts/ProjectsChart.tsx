@@ -25,6 +25,8 @@ export function ProjectsChart({ data }: ProjectsChartProps) {
     fail: 0,
   });
 
+  const [currentAngle, setCurrentAngle] = useState(0);
+
   useEffect(() => {
     const stats = data.reduce(
       (acc, item) => {
@@ -36,12 +38,6 @@ export function ProjectsChart({ data }: ProjectsChartProps) {
     );
     setProjectStats(stats);
   }, [data]);
-
-  if (!data || data.length === 0) {
-    return (
-      <div className="text-muted-foreground p-4">No project data available</div>
-    );
-  }
 
   const width = 300;
   const height = 300;
@@ -71,13 +67,18 @@ export function ProjectsChart({ data }: ProjectsChartProps) {
 
   const passAngle = (projectStats.pass / total) * 360;
 
-  const [currentAngle, setCurrentAngle] = useState(0);
   useEffect(() => {
     const timer = setTimeout(() => {
       setCurrentAngle(passAngle);
     }, 100);
     return () => clearTimeout(timer);
   }, [passAngle]);
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-muted-foreground p-4">No project data available</div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center">

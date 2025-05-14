@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/app/context/ThemeContext";
+import Image from "next/image";
 
 const LOGO_DARK = "/logo Z01.png";
 const LOGO_LIGHT = "/logo Z01light4.png";
@@ -84,10 +85,11 @@ export default function LoginForm() {
 
   return (
     <>
-      <img
+      <Image
         src={BG_IMAGE}
         className="absolute top-0 left-0 w-screen h-full object-cover -z-10 opacity-60"
         alt="background shape"
+        layout="fill"
       />
       <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 z-0">
         <div
@@ -105,11 +107,13 @@ export default function LoginForm() {
               visualizations of your academic journey.
             </p>
             <div className="mt-12 opacity-80">
-              <img
+              <Image
                 src={logoImage}
                 alt="background shape"
                 className="mx-auto"
-              ></img>
+                width={200}
+                height={200}
+              />
             </div>
           </div>
         </div>

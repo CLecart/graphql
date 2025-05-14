@@ -6,7 +6,7 @@
 export interface User {
   id: number;
   login: string;
-  attrs?: Record<string, any>;
+  attrs?: Record<string, string | number | boolean>;
 }
 
 /**

@@ -6,6 +6,14 @@ type Skill = {
   score: number;
 };
 
+type DataItem = {
+  path?: string;
+  object?: {
+    name?: string;
+  };
+  grade?: number;
+};
+
 const CHART_COLOR = "var(--color-chart-1)";
 const CHART_SIZE = 300;
 const CHART_RADIUS = CHART_SIZE * 0.4;
@@ -16,7 +24,7 @@ const LEVELS = [0.2, 0.4, 0.6, 0.8, 1];
  * Affiche un radar chart des compétences principales.
  * @param data - Liste des projets ou transactions pour calculer les scores de compétences
  */
-export function SkillsRadarChart({ data }: { data: any[] }) {
+export function SkillsRadarChart({ data }: { data: DataItem[] }) {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [scale, setScale] = useState(0);
 
