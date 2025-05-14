@@ -21,14 +21,7 @@ const GENERIC_ERROR = "An error occurred";
 const POWERED_BY = "Powered by GraphQL & Next.js";
 
 const schema = z.object({
-  email: z
-    .string()
-    .refine(
-      (val) => val === "clecart" || z.string().email().safeParse(val).success,
-      {
-        message: "Invalid email (or unauthorized username)",
-      }
-    ),
+  email: z.string(),
   password: z.string().min(6, "Must contain at least 6 characters"),
 });
 
