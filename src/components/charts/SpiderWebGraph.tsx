@@ -22,12 +22,6 @@ export function SpiderWebChart({
 }: SkillsRadarChartProps) {
   const svgRef = useRef<SVGSVGElement>(null);
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="text-muted-foreground p-4">No skills data available</div>
-    );
-  }
-
   useEffect(() => {
     if (!svgRef.current || !data || data.length === 0) return;
 
@@ -169,6 +163,12 @@ export function SpiderWebChart({
       g.appendChild(text);
     });
   }, [data, width, height, levels, maxSkills]);
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-muted-foreground p-4">No skills data available</div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-w-min items-center">

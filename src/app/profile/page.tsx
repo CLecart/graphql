@@ -5,13 +5,11 @@ import {
   GET_USER_INFO,
   GET_USER_XP,
   GET_USER_PROGRESS,
-  GET_USER_RESULTS,
   GET_USER_DETAILED_XP,
   GET_USER_SKILLS,
   GET_BEST_FRIEND,
   GET_ACTIVITY,
   GET_AUDITS,
-  GET_PROJECTS,
 } from "@/lib/queries";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,6 +23,7 @@ import AuditPieChart from "@/components/charts/AuditPie";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import ActivityHeatmap from "@/components/charts/ActivityHeatmap";
 import Loader from "@/components/ui/Loader";
+import Image from "next/image";
 
 // Types
 interface Audit {
@@ -42,22 +41,6 @@ interface Audit {
       };
     }[];
   };
-}
-interface TransactionObject {
-  name: string;
-  type: string;
-}
-
-interface Transaction {
-  type: string;
-  amount: number;
-  createdAt: string;
-  path: string;
-  object: TransactionObject | null;
-}
-
-interface User {
-  transactions?: Transaction[];
 }
 
 export default function ProfilePage() {
@@ -158,32 +141,18 @@ export default function ProfilePage() {
 
   if (!isClient) return null;
 
-  const getAttrsValue = (
-    attrs: any,
-    key: string,
-    defaultValue: string = "N/A"
-  ) => {
-    if (!attrs) return defaultValue;
-
-    try {
-      if (typeof attrs === "string") {
-        return JSON.parse(attrs)[key] || defaultValue;
-      } else if (typeof attrs === "object") {
-        return attrs[key] || defaultValue;
-      }
-    } catch (e) {
-      console.error("Error parsing attrs:", e);
-    }
-
-    return defaultValue;
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/40 color-[var(--foreground)]">
       <header className="sticky top-0 z-10 backdrop-blur-md bg-background/80 px-8 py-4 border-b border-border/40 flex justify-between items-center">
         <div className="flex items-center gap-4">
           <div className="h-10 w-10 aspect-square rounded-full flex items-center justify-center text-primary-foreground font-bold mr-3 bg-black dark:bg-white">
-            <img src="/favicon.ico" alt="Logo" className="h-6 w-6" />
+            <Image
+              src="/favicon.ico"
+              alt="Logo"
+              className="h-6 w-6"
+              width={24}
+              height={24}
+            />
           </div>
           <h1 className="text-2xl font-bold">Zone01 Profile</h1>
         </div>
@@ -272,10 +241,12 @@ export default function ProfilePage() {
                     {/* ...infos user... */}
                     <div className="mb-6 flex justify-center">
                       <div className="h-24 w-24 aspect-square rounded-full bg-primary/20 border-4 border-primary flex items-center justify-center text-2xl font-bold text-primary">
-                        <img
+                        <Image
                           src="/favicon.ico"
                           alt="Logo"
                           className="h-12 w-12"
+                          width={48}
+                          height={48}
                         />
                       </div>
                     </div>

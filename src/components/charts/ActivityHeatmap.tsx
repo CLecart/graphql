@@ -127,7 +127,7 @@ const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ data }) => {
       <div className="flex">
         {/* Labels jours de la semaine à gauche */}
         <div className="flex flex-col justify-between mr-2 mt-[18px]">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, i) => (
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div
               key={day}
               className="h-4 text-xs text-gray-500 dark:text-gray-400 mb-[3px] flex items-center"
