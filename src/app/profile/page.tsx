@@ -50,11 +50,34 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
 
   const { data: userData, loading: userLoading } = useQuery(GET_USER_INFO);
-  const { data: xpData, loading: xpLoading } = useQuery(GET_USER_XP);
-  const { data: progressData, loading: progressLoading } =
-    useQuery(GET_USER_PROGRESS);
-  const { data: detailedXpData, loading: detailedXpLoading } =
-    useQuery(GET_USER_DETAILED_XP);
+  const userId = userData?.user?.[0]?.id;
+  const {
+    data: xpData,
+    loading: xpLoading,
+    refetch: refetchXp,
+  } = useQuery(GET_USER_XP, {
+    variables: { userId },
+    fetchPolicy: "network-only",
+    skip: !userId,
+  });
+  const {
+    data: progressData,
+    loading: progressLoading,
+    refetch: refetchProgress,
+  } = useQuery(GET_USER_PROGRESS, {
+    variables: { userId },
+    fetchPolicy: "network-only",
+    skip: !userId,
+  });
+  const {
+    data: detailedXpData,
+    loading: detailedXpLoading,
+    refetch: refetchDetailedXp,
+  } = useQuery(GET_USER_DETAILED_XP, {
+    variables: { userId },
+    fetchPolicy: "network-only",
+    skip: !userId,
+  });
   const { data: skillsData, loading: skillsLoading } =
     useQuery(GET_USER_SKILLS);
   const { data: bestFriendData, loading: bestFriendLoading } =
@@ -96,6 +119,14 @@ export default function ProfilePage() {
     activityData,
     auditData,
   ]);
+
+  useEffect(() => {
+    if (userId) {
+      refetchProgress();
+      refetchXp();
+      refetchDetailedXp();
+    }
+  }, [userId, refetchProgress, refetchXp, refetchDetailedXp]);
 
   const handleLogout = () => {
     localStorage.removeItem("jwt_token");

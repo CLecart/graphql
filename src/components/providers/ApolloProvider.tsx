@@ -7,6 +7,7 @@ import {
   ApolloProvider,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
+import { onError } from "@apollo/client/link/error";
 import React from "react";
 
 const httpLink = createHttpLink({
@@ -14,11 +15,8 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  let token;
-  if (typeof window !== "undefined") {
-    token = localStorage.getItem("jwt_token");
-  }
-
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("jwt_token") : null;
   return {
     headers: {
       ...headers,
@@ -27,10 +25,33 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const errorLink = onError(({ networkError }) => {
+  if (
+    networkError &&
+    "statusCode" in networkError &&
+    networkError.statusCode === 401
+  ) {
+    localStorage.removeItem("jwt_token");
+    client.clearStore();
+  }
+});
+
 export const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: errorLink.concat(authLink).concat(httpLink),
   cache: new InMemoryCache(),
 });
+
+export function resetApolloCache() {
+  client.resetStore();
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (event.key === "jwt_token") {
+      resetApolloCache();
+    }
+  });
+}
 
 /**
  * Fournit le client Apollo à l'ensemble de l'application.
